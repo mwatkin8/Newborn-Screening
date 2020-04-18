@@ -1,4 +1,4 @@
-# Newborn-Screening
+# Newborn-Screening <img src="public/img/dark-icon.png" height="45" width="45">
 
 Architecture uses [Express](https://expressjs.com/).<br>
 Templating done via [EJS](https://ejs.co/).<br>
