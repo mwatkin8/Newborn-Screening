@@ -9,22 +9,164 @@ app.set('view engine', 'html');
 //Allow access to front-end static files
 app.use(express.static(path.join(__dirname, '/public/')));
 
-app.get('/', async (request, response) => {response.render('signin');});
-app.get('/signin', async (request, response) => {response.render('signin');});
-app.get('/activate1', async (request, response) => {response.render('activate1');});
-app.get('/home', async (request, response) => {response.render('home');});
+let server = 'https://api.logicahealth.org/nbs/open'
+let nb_id,username,password;
+
+app.get('/', async (request, response) => {
+  if(request.query.login){
+    username = request.query.login.split('|')[0];
+    password = request.query.login.split('|')[1];
+    let url = server + '/RelatedPerson?identifier=ResultsMyWay-username|' + username;
+    let bundle = await getResource(url);
+    let r = bundle.entry[0].resource;
+    for(let identifier of r.identifier){
+      if(identifier.system === 'ResultsMyWay-password'){
+        if(identifier.value !== password){
+          //Invalid user
+          response.render('signin',{login:'--Invalid login, try again--'});
+        }
+        else{
+          //Valid user
+          let patient = await getResource(server + '/' + r.patient.reference);
+          let nb_name = patient.name[0].text;
+          response.render('home',{user:r.name[0].text,rel:r.relationship[0].coding[0].display,nb:nb_name})
+        }
+      }
+    }
+  }
+  else{
+    response.render('signin',{login:''});
+  }
+});
+app.get('/activate-step1', async (request, response) => {response.render('activate-step1');});
+app.get('/activate-step2', async (request, response) => {
+  let match = await verifyActivationParams(request.query.code,request.query.zip,request.query.birthDate);
+  nb_id = match[0];
+  response.render('activate-step2',{name:match[1],dob:match[2],facility:match[3]});
+});
+app.get('/activate-step3', async (request, response) => {response.render('activate-step3');});
+app.get('/activate-step4', async (request, response) => {
+  let primary = await buildRelatedPerson(request.query.pfn,request.query.pln,request.query.pr,request.query.pe,request.query.pp,request.query.m);
+  let secondary;
+  if(request.query.sfn){
+    secondary = await buildRelatedPerson(request.query.sfn,request.query.sln,request.query.sr,request.query.se,request.query.sp,request.query.m);
+  }
+  let bundle = await JSON.parse('{\"resourceType\": \"Bundle\",\"type\": \"transaction\",\"total\": 1, \"entry\": []}')
+  let entry = JSON.parse('{\"resource\": \"\", \"request\": {\"method\": \"POST\", \"url\": \"RelatedPerson\"}}');
+  entry.resource = primary;
+  bundle.entry.push(entry);
+  if(secondary){
+    entry = JSON.parse('{\"resource\": \"\", \"request\": {\"method\": \"POST\", \"url\": \"RelatedPerson\"}}');
+    entry.resource = secondary;
+    bundle.entry.push(entry);
+    bundle.total += 1;
+  }
+  let outcome = await postResource(bundle);
+  console.log(outcome);
+  response.render('activate-step4');
+});
+
+app.get('/home', async (request, response) => {
+  let url = server + '/RelatedPerson?identifier=ResultsMyWay-username|' + username;
+  let bundle = await getResource(url);
+  let r = bundle.entry[0].resource;
+  let patient = await getResource(server + '/' + r.patient.reference);
+  let nb_name = patient.name[0].text;
+  response.render('home',{user:r.name[0].text,rel:r.relationship[0].coding[0].display,nb:nb_name})
+});
+
 app.get('/results', async (request, response) => {response.render('results');});
 
+async function getResource(url){
+    let response = await fetch(url);
+    return await response.json();
+}
 
+async function postResource(bundle){
+  let params = {
+      method:"POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(bundle)
+  };
+  let response = await fetch(server, params);
+  let r = await response.json();
+  if (r.entry[0].response.status === '201 Created'){
+      return r.entry[0].response.location.split('/')[1]
+  }
+  else{
+      return 'error'
+  }
+}
 
+let relationships = {"NMTH":"Natural Mother","NFTH":"Natural Father",
+"ADOPTM":"Adoptive Mother","ADOPTF":"Adoptive Father","MGRMTH":"Maternal Grandmother",
+"MGRFTH":"Maternal Grandfather","PGRMTH":"Paternal Grandmother",
+"PGRFTH":"Paternal Grandfather","FRND":"Unrelated Friend","O":"Other"};
+///activate-step3?pfn=Amy&pln=Lee&pr=test&pe=amylee@gmail.com&pp=909-592-1291&m=text&sfn=David&sln=Lee&sr=NFTH&se=davidlee@gmail.com&sp=909-210-3156
+async function buildRelatedPerson(fn,ln,rel,email,phone,mode){
+  let r = {"resourceType":"RelatedPerson"}
+  r.identifier = [
+    {
+      "system": "ResultsMyWay-username",
+      "value": email
+    },
+    {
+      "system": "ResultsMyWay-password",
+      "value": 'temp'
+    }
+  ];
+  r.patient = {"reference":"Patient/" + nb_id};
+  let display;
+  let code = rel;
+  if (relationships[code]){
+    display = relationships[rel];
+  }
+  else{
+    display = rel;
+    code = "O"
+  }
+  r.relationship = [{
+    "coding":[{
+      "system":"http://hl7.org/fhir/ValueSet/relatedperson-relationshiptype",
+      "code": code,
+      "display":display
+    }]
+  }];
+  r.name = [{"text":fn + ' ' + ln,"family":ln,"given":[fn]}];
+  let system = 'phone';
+  if(mode === 'text'){
+    system = 'sms'
+  }
+  r.telecom = [
+    {
+      "system": "email",
+      "value": email
+    },
+    {
+      "system": system,
+      "value": phone
+    }
+  ]
+  return r;
+}
 
+async function verifyActivationParams(code,zip,birthDate){
+  let url = server + '/Patient?identifier=ResultsMyWay|' + code + '&address-postalcode=' + zip + '&birthdate=' + birthDate;
+  let bundle = await getResource(url);
+  let r = bundle.entry[0].resource;
+  let id = r.id;
+  let name = r.name[0].given[0] + ' ' + r.name[0].family + ' ';
+  let bd = r.birthDate;
+  //Query for the managing organization to get its name
+  let o = r.managingOrganization.reference;
+  r = await getResource(server + '/' + o);
+  let organization = r.name;
+  return [id,name,bd,organization]
+}
 
-
-
-
-
-
-
+/*
 //-------SMART launch params---------
 let client = "PUT-CLIENT-ID-HERE"; //Given by sandbox when registering
 let server,launch,redirect,authUri,tokenUri;
@@ -64,7 +206,15 @@ app.get('/smart-launch', async (request, response) => {
         "state=" + state )
 });
 
-/*
+
+async function getResource(url){
+    let response = await fetch(url, {
+        method: 'get',
+        headers: {'Authorization': 'Bearer ' + token}
+    });
+    return await response.json();
+}
+
 //Fetch the patient access token
 let code = request.query.code;
 let r = await fetch(tokenUri, {
@@ -86,25 +236,6 @@ app.get('/', async (request, response) => {
 
 });
 */
-
-async function getResource(url){
-    let response = await fetch(url, {
-        method: 'get',
-        headers: {'Authorization': 'Bearer ' + token}
-    });
-    return await response.json();
-}
-
-async function demographics(){
-    let url = server + '/Patient?_id=' + patient;
-    let bundle = await getResource(url);
-    let p = bundle.entry[0].resource;
-    let name = p.name[0].given[0] + ' ' + p.name[0].family + ' ';
-    let today = new Date();
-    let age = today.getFullYear() - parseInt(p.birthDate.split('-')[0]);
-    let gender = p.gender
-    return [name,gender,age];
-}
 
 // Here is where we define the port for the localhost server to setup
 app.listen(8080);

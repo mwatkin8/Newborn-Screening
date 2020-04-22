@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="img/dark-icon.png">
+  <title>Results My Way</title>
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="css/signin.css" rel="stylesheet">
+  <!-- JS -->
+  <script src="js/script.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+  <form>
+    <h3 class="h3 mb-3 font-weight-normal">Step 3</h3>
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-11">
+        <p>REQUIRED: Provide your most up-to-date contact information. This is how the doctor will reach out to you concerning your newborn screening results.</p>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>Who is filling out this form?</p>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="primary-fname" class="form-control" placeholder="First Name">
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="primary-lname" class="form-control" placeholder="Last Name">
+            </div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>What is your relationship with newborn?</p>
+            </div>
+            <div class="col-md-4">
+              <select class="text-muted" id="primary-rel">
+                  <option value="">Select...</option>
+                  <option value="NMTH">Natural Mother</option>
+                  <option value="NFTH">Natural Father</option>
+                  <option value="ADOPTM">Adoptive Mother</option>
+                  <option value="ADOPTF">Adoptive Father</option>
+                  <option value="MGRMTH">Maternal Grandmother</option>
+                  <option value="MGRFTH">Maternal Grandfather</option>
+                  <option value="PGRMTH">Paternal Grandmother</option>
+                  <option value="PGRFTH">Paternal Grandfather</option>
+                  <option value="FRND">Unrelated Friend</option>
+                  <option value="O">Other</option>
+              </select>
+            </div>
+            <div class="col-md-4"><input type="text" id="primary-rel-other" class="form-control" placeholder="If other, please specify"></div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>Email address</p>
+            </div>
+            <div class="col-md-4">
+              <input type="email" id="primary-email" class="form-control" placeholder="Email address">
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>Phone number</p>
+            </div>
+            <div class="col-md-4">
+              <input class="text-muted" type="tel" id="primary-phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="XXX-XXX-XXXX" required>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-8">
+              <p>How do you want to be contacted when your child's screening results are available?</p>
+            </div>
+            <div class="col-md-4">
+                <input type="radio" name="mode" value="text" checked> SMS
+                &emsp;&emsp;<input type="radio" name="mode" value="call"> Automated phone call
+            </div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>OPTIONAL: Secondary contact (will be contacted if unable to reach primary)</p>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="secondary-fname" class="form-control" placeholder="First Name">
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="secondary-lname" class="form-control" placeholder="Last Name">
+            </div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>What is your relationship with newborn?</p>
+            </div>
+            <div class="col-md-4">
+              <select class="text-muted" id="secondary-rel">
+                <option value="">Select...</option>
+                  <option value="NMTH">Natural Mother</option>
+                  <option value="NFTH">Natural Father</option>
+                  <option value="ADOPTM">Adoptive Mother</option>
+                  <option value="ADOPTF">Adoptive Father</option>
+                  <option value="MGRMTH">Maternal Grandmother</option>
+                  <option value="MGRFTH">Maternal Grandfather</option>
+                  <option value="PGRMTH">Paternal Grandmother</option>
+                  <option value="PGRFTH">Paternal Grandfather</option>
+                  <option value="FRND">Unrelated Friend</option>
+                  <option value="O">Other</option>
+              </select>
+            </div>
+            <div class="col-md-4"><input type="text" id="secondary-rel-other" class="form-control" placeholder="If other, please specify"></div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>Email address</p>
+            </div>
+            <div class="col-md-4">
+              <input type="email" id="secondary-email" class="form-control" placeholder="Email address">
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div style="padding-bottom:5px" class="row">
+            <div class="col-md-4">
+              <p>Phone number</p>
+            </div>
+            <div class="col-md-4">
+              <input class="text-muted" type="tel" id="secondary-phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="XXX-XXX-XXXX" required>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <button type="button" onclick="activateStep4()" class="btn btn-md btn-outline-light btn-block">Confirm</button>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+      </div>
+    </div>
+  </form>
+</body>
+</html>
