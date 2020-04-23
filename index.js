@@ -153,7 +153,8 @@ async function buildRelatedPerson(fn,ln,rel,email,phone,mode){
 }
 
 async function verifyActivationParams(code,zip,birthDate){
-  let url = server + '/Patient?identifier=ResultsMyWay|' + code + '&address-postalcode=' + zip + '&birthdate=' + birthDate;
+  let url = server + '/Patient?identifier=ResultsMyWay|' + code +
+  '&address-postalcode=' + zip + '&birthdate=' + birthDate;
   let bundle = await getResource(url);
   let r = bundle.entry[0].resource;
   let id = r.id;
@@ -166,6 +167,46 @@ async function verifyActivationParams(code,zip,birthDate){
   return [id,name,bd,organization]
 }
 
+async function createReport(){
+  let pdf = await pdfjsLib.getDocument('../sample.pdf');
+  let page1 = await pdf.getPage(1);
+  let page2 = await pdf.getPage(2);
+  let content1 = await page1.getTextContent();
+  let content2 = await page2.getTextContent();
+  let response = await fetch('../sample.pdf');
+  let b = await response.blob();
+  let reader = new FileReader();
+  reader.onloadend = function() {
+      let url = reader.result;
+      let base64 = url.split(',')[1];
+      parsePDF(content1, content2, base64);
+  };
+  let binary = localStorage['pdf-binary'];
+    t.presentedForm = {
+        'contentType': 'application/pdf',
+        'language': 'en',
+        'data': binary,
+    };
+}
+
+async function displayReport(){
+
+
+    document.getElementById('main-content').innerHTML = '<img style="padding-left:350px;" src="../img/loader.gif"/>';
+    let url = window.server + '/DiagnosticReport?_id=' + window.reportID;
+    let bundle = await getResource(url);
+    let r =  bundle.entry[0].resource;
+    let base64 = r.presentedForm[0].data;
+    let byteCharacters = atob(base64);
+    let byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    let byteArray = new Uint8Array(byteNumbers);
+    let blob = new Blob([byteArray], {type: "application/pdf"});
+    let file = window.URL.createObjectURL(blob);
+    document.getElementById('main-content').innerHTML = '<iframe id="frame" width="100%" height="800px" src="' + file + '"></iframe>'
+}
 /*
 //-------SMART launch params---------
 let client = "PUT-CLIENT-ID-HERE"; //Given by sandbox when registering
