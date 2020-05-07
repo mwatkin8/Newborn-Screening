@@ -1,3 +1,21 @@
+async function accountDetail(rel,rel_display,method){
+  let options = d3.selectAll('option');
+  options._groups[0].forEach(option => {
+    if(option.value === rel){
+      option.setAttribute('selected','selected')
+    }
+  });
+  if(rel === 'O'){
+    d3.select('#primary-rel-other').attr('placeholder',rel_display)
+  }
+  if(method === 'sms'){
+    d3.select('#sms').attr('checked','checked');
+  }
+  if(method === 'phone'){
+    d3.select('#phone').attr('checked','checked');
+  }
+}
+
 async function login(){
   let username = d3.select('#username').property('value');
   let password = d3.select('#password').property('value');
@@ -83,99 +101,99 @@ function drawTimeline(){
     .style("z-index", 1100);
   let line_highlight = svg.append("svg:line")
     .attr("x1", 150)
-    .attr("y1", 150)
+    .attr("y1", 200)
     .attr("x2", 750)
-    .attr("y2", 150)
+    .attr("y2", 200)
     .style("stroke", "white")
     .style("stroke-width", 10);
   let circle1_highlight = svg.append("svg:circle")
     .attr("cx", 150)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
   let circle1 = svg.append("svg:circle")
     .attr("cx", 150)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
   let circle2_highlight = svg.append("svg:circle")
     .attr("cx", 350)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
   let circle2 = svg.append("svg:circle")
     .attr("cx", 350)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
   let circle3_highlight = svg.append("svg:circle")
     .attr("cx", 550)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
   let circle3 = svg.append("svg:circle")
     .attr("cx", 550)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
   let circle4_highlight = svg.append("svg:circle")
     .attr("cx", 750)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
   let circle4 = svg.append("svg:circle")
     .attr("cx", 750)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
   let circle5 = svg.append("svg:circle")
     .attr("cx", 950)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
   let line = svg.append("svg:line")
     .attr("x1", 150)
-    .attr("y1", 150)
+    .attr("y1", 200)
     .attr("x2", 950)
-    .attr("y2", 150)
+    .attr("y2", 200)
     .style("stroke", "#50A7C2")
     .style("stroke-width", 5);
   let current = svg.append("svg:circle")
     .attr("cx", 750)
-    .attr("cy", 150)
+    .attr("cy", 200)
     .attr("r", 5)
     .attr("fill", "white");
   let label1 = svg.append("svg:text")
     .attr("x", "75")
-    .attr("y", "100")
+    .attr("y", "250")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Specimen Collected");
   let label2 = svg.append("svg:text")
     .attr("x", "275")
-    .attr("y", "200")
+    .attr("y", "160")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Specimen Processed");
   let label3 = svg.append("svg:text")
     .attr("x", "475")
-    .attr("y", "100")
+    .attr("y", "250")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Results Reviewed");
   let label4 = svg.append("svg:text")
     .attr("x", "675")
-    .attr("y", "200")
+    .attr("y", "160")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Call from Doctor");
   let label5 = svg.append("svg:text")
     .attr("x", "875")
-    .attr("y", "100")
+    .attr("y", "250")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")

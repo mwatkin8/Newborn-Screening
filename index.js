@@ -10,7 +10,7 @@ app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, '/public/')));
 
 let server = 'https://api.logicahealth.org/nbs/open'
-let nb_id,username,password;
+let nb_id,username,password,fname,lname,rel,rel_display,method,email,phone;
 
 app.get('/', async (request, response) => {
   if(request.query.login){
@@ -27,6 +27,23 @@ app.get('/', async (request, response) => {
         }
         else{
           //Valid user
+          fname = r.name[0].given[0];
+          lname = r.name[0].family;
+          rel = r.relationship[0].coding[0].code;
+          rel_display = r.relationship[0].coding[0].display;
+          for(let type of r.telecom){
+            if(type.system === 'email'){
+              email = type.value;
+            }
+            if(type.system === 'sms'){
+              method = 'sms'
+              phone = type.value;
+            }
+            if(type.system === 'phone'){
+              method = 'phone'
+              phone = type.value;
+            }
+          }
           let patient = await getResource(server + '/' + r.patient.reference);
           let nb_name = patient.name[0].text;
           response.render('home',{user:r.name[0].text,rel:r.relationship[0].coding[0].display,nb:nb_name})
@@ -76,6 +93,13 @@ app.get('/home', async (request, response) => {
 });
 
 app.get('/results', async (request, response) => {response.render('results');});
+app.get('/team', async (request, response) => {response.render('team');});
+app.get('/library', async (request, response) => {response.render('library');});
+app.get('/trials', async (request, response) => {response.render('trials');});
+app.get('/community', async (request, response) => {response.render('community');});
+app.get('/account', async (request, response) => {
+  response.render('account',{fname:fname,lname:lname,rel:rel,rel_display:rel_display,method:method,email:email,phone:phone});
+});
 
 async function getResource(url){
     let response = await fetch(url);

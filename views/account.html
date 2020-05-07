@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/icons/dark-icon.png">
+    <title>Results My Way</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
+  </head>
+
+  <body onload="accountDetail('<%= rel %>','<%= rel_display %>','<%= method %>')">
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <h4 class="title d-flex align-items-center px-3 mt-1 mb-1 text-muted">
+              Results My Way &nbsp;<a href="/"><img src="img/icons/dark-icon.png" height="30" width="30"></a>
+                <!--a class="d-flex align-items-center text-muted" href="#">
+                  <span data-feather="plus-circle"></span>
+              </a-->
+            </h4>
+            <hr>
+
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/home">
+                  <span data-feather="home"></span>
+                  Home <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/results">
+                  <span data-feather="activity"></span>
+                  Results
+                </a>
+              </li>
+            </ul>
+
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Resources</span>
+              <!--a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+            </a-->
+            </h6>
+            <ul class="nav flex-column mb-2">
+                <li class="nav-item">
+                  <a class="nav-link" href="/library">
+                    <span data-feather="book-open"></span>
+                    Knowledge Library
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/team">
+                    <span data-feather="users"></span>
+                    Care Team
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/community">
+                    <span data-feather="smile"></span>
+                    Community
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/trials">
+                    <span data-feather="clipboard"></span>
+                    Clinical Trials
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#">
+                    <span data-feather="settings"></span>
+                    Account Information
+                  </a>
+                </li>
+
+            </ul>
+          </div>
+        </nav>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pl-10 pr-0">
+
+          <form>
+            <h1 class="h1 mb-3 font-weight-normal text-white text-center">Account Information</h1>
+            <div class="row">
+              <div class="col-md-12">
+                <div>
+                  <h5>User Full Name</h5>
+                </div>
+                <div style="padding:5px" class="row">
+                    <div class="col-md-4">
+                      <input type="text" id="primary-fname" class="form-control" placeholder="<%= fname %>">
+                    </div>
+                    <div class="col-md-4">
+                      <input type="text" id="primary-lname" class="form-control" placeholder="<%= lname %>">
+                    </div>
+                </div>
+                <div style="padding-top:10px;">
+                  <h5>Relationship with Newborn</h5>
+                </div>
+                <div style="padding-bottom:5px" class="row">
+                    <div class="col-md-4">
+                      <select class="text-muted" id="primary-rel">
+                          <option value="">Select...</option>
+                          <option value="NMTH">Natural Mother</option>
+                          <option value="NFTH">Natural Father</option>
+                          <option value="ADOPTM">Adoptive Mother</option>
+                          <option value="ADOPTF">Adoptive Father</option>
+                          <option value="MGRMTH">Maternal Grandmother</option>
+                          <option value="MGRFTH">Maternal Grandfather</option>
+                          <option value="PGRMTH">Paternal Grandmother</option>
+                          <option value="PGRFTH">Paternal Grandfather</option>
+                          <option value="FRND">Unrelated Friend</option>
+                          <option value="O">Other</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4"><input type="text" id="primary-rel-other" class="form-control" placeholder="If other, please specify"></div>
+                </div>
+                <div style="padding-top:10px;">
+                  <h5>Email</h5>
+                </div>
+                <div style="padding-bottom:5px" class="row">
+                    <div class="col-md-4">
+                      <input type="email" id="primary-email" class="form-control" placeholder="<%= email %>">
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div style="padding-top:10px;">
+                  <h5>Phone number</h5>
+                </div>
+                <div style="padding-bottom:5px" class="row">
+                    <div class="col-md-4">
+                      <input class="text-muted" type="tel" id="primary-phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="<%= phone %>" required>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div style="padding-top:10px;">
+                  <h5>Preferred Contact Method</h5>
+                </div>
+                <div style="padding-bottom:5px" class="row">
+                    <div class="col-md-4">
+                        <input id="sms" type="radio" name="mode" value="text"> SMS
+                        &emsp;&emsp;<input id="phone" type="radio" name="mode" value="call"> Automated phone call
+                    </div>
+                </div>
+                <div style="padding-top:20px;" class="row">
+                    <div class="col-md-4">
+                      <button type="button" onclick="activateStep4()" class="btn btn-md btn-light btn-block text-muted">Change Password</button>
+                    </div>
+                </div>
+
+                <br><br><br>
+                <div class="row">
+                  <div class="col-md-4"></div>
+                  <div class="col-md-4">
+                    <button type="button" onclick="activateStep4()" class="btn btn-md btn-outline-light btn-block">Save Changes</button>
+                  </div>
+                  <div class="col-md-4"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+    <!-- JS links -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="js/script.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+  </body>
+</html>
