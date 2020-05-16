@@ -1,0 +1,203 @@
+{
+    "condition":"pku",
+    "library":{
+        "basic":[
+            {
+                "title":"Utah Newborn Screening",
+                "type":"Website",
+                "image":"ut-nbs.png",
+                "preview":"true",
+                "url":"https://newbornscreening.health.utah.gov/disorders/pku/"
+            },
+            {
+                "title":"Genetics Home Reference",
+                "type":"Website",
+                "image":"ghr.png",
+                "preview":"false",
+                "url":"https://ghr.nlm.nih.gov/condition/phenylketonuria"
+            },
+            {
+                "title":"Baby's First Test - About PKU",
+                "type":"Website",
+                "image":"baby-first.png",
+                "preview":"false",
+                "url":"https://www.babysfirsttest.org/newborn-screening/conditions/classic-phenylketonuria-pku"
+            },
+            {
+                "title":"Baby's First Test - Hot Topics",
+                "type":"Feed",
+                "image":"baby-first.png",
+                "preview":"false",
+                "url":"https://www.babysfirsttest.org/newborn-screening/blog/categories/hot-topics"
+            },
+            {
+                "title":"Baby's First Test - Policy",
+                "type":"Feed",
+                "image":"baby-first.png",
+                "preview":"false",
+                "url":"https://www.babysfirsttest.org/newborn-screening/blog/categories/policy"
+            },
+            {
+                "title":"Minnesota Dept. of Health",
+                "type":"Factsheet",
+                "image":"minn-doh.png",
+                "preview":"true",
+                "url":"https://www.health.state.mn.us/people/newbornscreening/"
+            },
+            {
+                "title":"Newbornscreening.info",
+                "type":"Factsheet",
+                "image":"nbs.info.png",
+                "preview":"true",
+                "url":"http://www.newbornscreening.info/Parents/aminoaciddisorders/PKU.html"
+            },
+            {
+                "title":"Cold Spring Harbor Laboratory",
+                "type":"Website",
+                "image":"csharbor.png",
+                "preview":"true",
+                "url":"http://www.ygyh.org/pku/whatisit.htm"
+            }
+        ],
+        "nutrition":[
+            {
+                "title":"University of Washington - PKU Diet",
+                "type":"Website",
+                "image":"univ-wash.png",
+                "preview":"true",
+                "url":"https://depts.washington.edu/pku/about/diet.html"
+            },
+            {
+                "title":"University of Washington - Finger Foods",
+                "type":"Factsheet",
+                "image":"univ-wash.png",
+                "preview":"true",
+                "url":"http://depts.washington.edu/pku/pdfs/Finger_Foods.pdf"
+            },
+            {
+                "title":"University of Washington - Recipes",
+                "type":"Website",
+                "image":"univ-wash.png",
+                "preview":"true",
+                "url":"http://depts.washington.edu/pku/recipes/index.html"
+            },
+            {
+                "title":"National PKU Alliance - Diet Overview",
+                "type":"Factsheet",
+                "image":"npkua.png",
+                "preview":"false",
+                "url":"https://www.npkua.org/portals/0/pdfs/pkubinder/PKU%20Binder%202011-Ch2.pdf"
+            },
+            {
+                "title":"National PKU Alliance - Diet Tips",
+                "type":"Factsheet",
+                "image":"npkua.png",
+                "preview":"false",
+                "url":"https://www.npkua.org/portals/0/pdfs/pkubinder/PKU%20Binder%202011-Ch10.pdf"
+            },
+            {
+                "title":"Cook for Love",
+                "type":"Website",
+                "image":"cookforlove.svg",
+                "preview":"true",
+                "url":"https://cookforlove.org"
+            }
+        ],
+        "research":[
+            {
+                "title":"PubMed",
+                "type":"Website",
+                "image":"pubmed.jpeg",
+                "preview":"false",
+                "url":"https://pubmed.ncbi.nlm.nih.gov/?term=PKU"
+            }
+
+        ],
+        "media": [
+            {
+                "title":"Utah Newborn Screening",
+                "type":"Feed",
+                "image":"ut-nbs.png",
+                "preview":"true",
+                "url":"https://newbornscreening.health.utah.gov/news/"
+            },
+            {
+                "title":"Georgia PKU Connect",
+                "type":"Feed",
+                "image":"georgiapku.jpg",
+                "preview":"true",
+                "url":"https://georgiapku.org/personal-stories/"
+            },
+            {
+                "title":"Baby's First Test - Family Stories",
+                "type":"Feed",
+                "image":"baby-first.png",
+                "preview":"false",
+                "url":"https://www.babysfirsttest.org/newborn-screening/blog/categories/family-stories"
+            },
+            {
+                "title":"Baby's First Test - General News",
+                "type":"Feed",
+                "image":"baby-first.png",
+                "preview":"false",
+                "url":"https://www.babysfirsttest.org/newborn-screening/blog/categories/general-news"
+            },
+            {
+                "title":"Baby's First Test - Announcements",
+                "type":"Feed",
+                "image":"baby-first.png",
+                "preview":"false",
+                "url":"https://www.babysfirsttest.org/newborn-screening/blog/categories/announcements"
+            },
+            {
+                "title":"YouTube - Phenylketonuria (PKU)",
+                "type":"Video",
+                "image":"youtube.png",
+                "preview":"false",
+                "url":"https://www.youtube.com/watch?amp=&v=mBNRuNsDJKU&amp=&feature=emb_logo"
+            }
+        ]
+    },
+    "community":[
+        {
+            "title":"National PKU Alliance",
+            "image":"npkua.png",
+            "facebook":"https://www.facebook.com/NationalPKUAlliance",
+            "instagram":"https://www.instagram.com/national_pku_alliance/",
+            "twitter":"https://twitter.com/NPKUA_Info",
+            "website":"https://www.npkua.org/"
+        },
+        {
+            "title":"National PKU News",
+            "image":"npkunews.png",
+            "facebook":"https://www.facebook.com/nationalpkunews/",
+            "instagram":"https://www.instagram.com/howmuchphe/",
+            "twitter":"https://twitter.com/howmuchphe",
+            "website":"https://pkunews.org/"
+        },
+        {
+            "title":"Intermountain PKU and Allied Disorders Association",
+            "image":"intermountainpku.png",
+            "facebook":"https://www.facebook.com/IntermountainPKU/",
+            "instagram":"",
+            "twitter":"",
+            "website":"http://ipadutah.org/"
+        },
+        {
+            "title":"Cook for Love",
+            "image":"cookforlove.svg",
+            "facebook":"https://www.facebook.com/groups/cookforlove/",
+            "instagram":"",
+            "twitter":"",
+            "website":"https://cookforlove.org/"
+        },
+        {
+            "title":"Children's PKU Network",
+            "image":"childrenspku.jpg",
+            "facebook":"https://www.facebook.com/groups/cookforlove/",
+            "instagram":"",
+            "twitter":"",
+            "website":"http://www.pkunetwork.org/Childrens_PKU_Network/Home.html"
+        }
+    ]
+}

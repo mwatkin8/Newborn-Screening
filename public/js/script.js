@@ -1,3 +1,59 @@
+function loadLibrary(type,content){
+    drawTimeline()
+    content.library[type].forEach((source, i) => {
+        let list = d3.select('#content-list');
+        let row = list.append('div').attr('class','row media text-muted pt-3 pb-3 border-bottom border-gray');
+        let img = row.append('div').attr('class','col-md-2');
+        img.append('img').attr('src','img/content-imgs/' + content.condition +'/library/' + source.image).attr('width','70').attr('height','70').attr('class','mr-2 rounded');
+        let info = row.append('div').attr('class','col-md-10');
+        let title = info.append('div').attr('class','row ml-1');
+        title.append('h6').attr('class','mb-0').text(source.title);
+        let type = info.append('div').attr('class','row ml-1');
+        type.append('p').attr('class','mb-1').text(source.type);
+        let buttons = info.append('div').attr('class','row ml-1');
+        let navigate = buttons.append('a').attr('class','btn btn-sm btn-outline-primary').attr('role','button').attr('href',source.url).text('Visit Source ');
+        navigate.append('span').attr('data-feather','navigation');
+        if(source.preview === 'true'){
+            let preview = buttons.append('button').attr('class','btn-sm btn-outline-primary preview-button ml-3').attr('id','preview-button-' + i.toString()).attr('onclick','togglePreview(' + i.toString() + ',"' + source.url + '")').text('Preview ');
+            preview.append('span').attr('data-feather','chevrons-right');
+        }
+    });
+    feather.replace()
+    d3.select('#preview-button-0').attr('class','btn-sm btn-primary preview-button ml-3')
+}
+function togglePreview(idx,url){
+    let frame = d3.select('#preview-frame').attr('src',url);
+    d3.selectAll('.preview-button').attr('class','btn-sm btn-outline-primary preview-button ml-3')
+    let button = d3.select('#preview-button-' + idx.toString()).attr('class','btn-sm btn-primary preview-button ml-3')
+}
+
+function loadCommunity(content){
+    drawTimeline()
+    content.community.forEach((source, i) => {
+        let sources = d3.select('#sources');
+        let div = sources.append('div').attr('class','text-center border-bottom border-gray pb-3 pt-3');
+        div.append('img').attr('class','border rounded-circle').attr('src','img/content-imgs/' + content.condition +'/community/' + source.image).attr('width','140').attr('height','140');
+        div.append('h3').text(source.title);
+        let p = div.append('p');
+        if(source.facebook !== ""){
+            let link = p.append('a').attr('href', source.facebook);
+            link.append('img').attr('class','rounded-circle mr-1').attr('src','img/icons/facebook.png').attr('width','30').attr('height','30');
+        }
+        if(source.instagram !== ""){
+            let link = p.append('a').attr('href', source.instagram);
+            link.append('img').attr('class','rounded-circle mr-1').attr('src','img/icons/instagram.png').attr('width','30').attr('height','30');
+        }
+        if(source.twitter !== ""){
+            let link = p.append('a').attr('href', source.twitter);
+            link.append('img').attr('class','rounded-circle mr-1').attr('src','img/icons/twitter.png').attr('width','30').attr('height','30');
+        }
+        if(source.website !== ""){
+            let link = div.append('a').attr('href', source.website).attr('style','text-decoration:none;').html('<span data-feather="home"></span> Organization Website ');
+        }
+    });
+    feather.replace()
+}
+
 async function accountDetail(rel,rel_display,method){
   let options = d3.selectAll('option');
   options._groups[0].forEach(option => {

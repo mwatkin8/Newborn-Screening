@@ -1,6 +1,7 @@
 let express = require('express');
 let path = require('path');
 let fetch = require('node-fetch')
+let fs = require('fs');
 let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
@@ -9,7 +10,7 @@ app.set('view engine', 'html');
 //Allow access to front-end static files
 app.use(express.static(path.join(__dirname, '/public/')));
 
-let server = 'https://api.logicahealth.org/nbs/open'
+let server = 'https://api.logicahealth.org/nbs/open';
 let nb_id,username,password,fname,lname,rel,rel_display,method,email,phone;
 
 app.get('/', async (request, response) => {
@@ -94,9 +95,60 @@ app.get('/home', async (request, response) => {
 
 app.get('/results', async (request, response) => {response.render('results');});
 app.get('/team', async (request, response) => {response.render('team');});
-app.get('/library', async (request, response) => {response.render('library');});
-app.get('/trials', async (request, response) => {response.render('trials');});
-app.get('/community', async (request, response) => {response.render('community');});
+app.get('/library', async (request, response) => {
+    let content;
+    //Pull content for library and community pages
+    try {
+        content = await fs.readFileSync('content-json/pku.json');
+    } catch(e) {
+        console.log('Error:', e.stack);
+    }
+    response.render('library',{content:content});
+});
+app.get('/library-nutrition', async (request, response) => {
+    let content;
+    //Pull content for library and community pages
+    try {
+        content = await fs.readFileSync('content-json/pku.json');
+    } catch(e) {
+        console.log('Error:', e.stack);
+    }
+    response.render('library-nutrition',{content:content});
+
+});
+app.get('/library-research', async (request, response) => {
+    let content;
+    //Pull content for library and community pages
+    try {
+        content = await fs.readFileSync('content-json/pku.json');
+    } catch(e) {
+        console.log('Error:', e.stack);
+    }
+    response.render('library-research',{content:content});
+
+});
+app.get('/library-media', async (request, response) => {
+    let content;
+    //Pull content for library and community pages
+    try {
+        content = await fs.readFileSync('content-json/pku.json');
+    } catch(e) {
+        console.log('Error:', e.stack);
+    }
+    response.render('library-media',{content:content});
+
+});
+app.get('/studies', async (request, response) => {response.render('studies');});
+app.get('/community', async (request, response) => {
+    let content;
+    //Pull content for library and community pages
+    try {
+        content = await fs.readFileSync('content-json/pku.json');
+    } catch(e) {
+        console.log('Error:', e.stack);
+    }
+    response.render('community',{content:content});
+});
 app.get('/account', async (request, response) => {
   response.render('account',{fname:fname,lname:lname,rel:rel,rel_display:rel_display,method:method,email:email,phone:phone});
 });

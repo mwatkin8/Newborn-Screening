@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -12,188 +12,152 @@
     <!-- Custom styles for this template -->
     <link href="css/carousel.css" rel="stylesheet">
     <link href="css/dashboard.css" rel="stylesheet">
-  </head>
+</head>
 
-  <body onload="drawTimeline()">
+<body onload="loadLibrary('basic',<%= content %>)">
     <div class="container-fluid">
-      <div class="row">
-        <nav class="col-md-2 d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <h4 class="title d-flex align-items-center px-3 mt-1 mb-1 text-muted">
-              Results My Way &nbsp;<a href="/"><img src="img/icons/dark-icon.png" height="30" width="30"></a>
-                <!--a class="d-flex align-items-center text-muted" href="#">
-                  <span data-feather="plus-circle"></span>
-              </a-->
-            </h4>
-            <hr>
+        <div class="row">
+            <nav class="col-md-2 d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <h4 class="title d-flex align-items-center px-3 mt-1 mb-1 text-muted">
+                        Results My Way &nbsp;<a href="/"><img src="img/icons/dark-icon.png" height="30" width="30"></a>
+                        <!--a class="d-flex align-items-center text-muted" href="#">
+                        <span data-feather="plus-circle"></span>
+                    </a-->
+                </h4>
+                <hr>
 
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="/home">
-                  <span data-feather="home"></span>
-                  Home <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/results">
-                  <span data-feather="activity"></span>
-                  Results
-                </a>
-              </li>
-            </ul>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">
+                            <span data-feather="home"></span>
+                            Home <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/results">
+                            <span data-feather="activity"></span>
+                            Results
+                        </a>
+                    </li>
+                </ul>
 
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Resources</span>
-              <!--a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-            </a-->
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Resources</span>
+                    <!--a class="d-flex align-items-center text-muted" href="#">
+                    <span data-feather="plus-circle"></span>
+                </a-->
             </h6>
             <ul class="nav flex-column mb-2">
                 <li class="nav-item">
-                  <a class="nav-link active" href="#">
-                    <span data-feather="book-open"></span>
-                    Knowledge Library
-                  </a>
+                    <a class="nav-link active" href="#">
+                        <span data-feather="book-open"></span>
+                        Knowledge Library
+                    </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/team">
-                    <span data-feather="users"></span>
-                    Care Team
-                  </a>
+                    <a class="nav-link" href="/team">
+                        <span data-feather="users"></span>
+                        Care Team
+                    </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/community">
-                    <span data-feather="smile"></span>
-                    Community
-                  </a>
+                    <a class="nav-link" href="/community">
+                        <span data-feather="smile"></span>
+                        Community
+                    </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/trials">
-                    <span data-feather="clipboard"></span>
-                    Clinical Trials
-                  </a>
+                    <a class="nav-link" href="/studies">
+                        <span data-feather="clipboard"></span>
+                        Clinical Studies
+                    </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/account">
-                    <span data-feather="settings"></span>
-                    Account Information
-                  </a>
+                    <a class="nav-link" href="/account">
+                        <span data-feather="settings"></span>
+                        Account Information
+                    </a>
                 </li>
 
             </ul>
-          </div>
-        </nav>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pl-0 pr-0">
-
-          <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        </div>
+    </nav>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pl-0 pr-0">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
-              <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-              <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
             </ol>
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                <div class="container">
-                  <div class="carousel-caption">
-                    <h1>Knowledge Library</h1>
-                    <h3>Find and access useful articles from credible sources</h3>
-                    <br>
-                    <p><a class="btn btn-lg btn-outline-light" href="#" role="button">Edit Team</a></p>
-                  </div>
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>Knowledge Library</h1>
+                            <br>
+                            <h3>Find and access useful articles from credible sources</h3>
+                            <br><br><br>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="carousel-item">
-                <div class="container">
-                  <div class="carousel-caption">
-                    <h2>Screening Timeline<br><br><br><br><br><br></h2>
-                  </div>
-                  <div id="timeline"></div>
+                <div class="carousel-item">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h2>Screening Timeline<br><br><br><br><br><br></h2>
+                        </div>
+                        <div id="timeline"></div>
+                    </div>
                 </div>
-              </div>
-
             </div>
             <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
             </a>
             <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
             </a>
-          </div>
-
-            <!-- Marketing messaging and featurettes
-            ================================================== -->
-            <!-- Wrap the rest of the page in another container to center all the content. -->
-
-            <div class="container marketing">
-
-              <ul class="nav nav-tabs">
+        </div>
+        <div style="padding-left:20px;padding-right:20px;">
+            <ul class="nav nav-tabs">
                 <li class="nav-item mb-0">
-                  <h5><a class="nav-link active" href="#">Basic Knowledge</a></h5>
+                    <h5><a class="nav-link active" href="#">Basic Knowledge</a></h5>
                 </li>
                 <li class="nav-item mb-0">
-                  <h5><a class="nav-link" href="#">Nutrition</a></h5>
+                    <h5><a class="nav-link" href="/library-nutrition">Nutrition</a></h5>
                 </li>
                 <li class="nav-item mb-0">
-                  <h5><a class="nav-link" href="#">Research</a></h5>
+                    <h5><a class="nav-link" href="/library-research">Research</a></h5>
                 </li>
                 <li class="nav-item mb-0">
-                  <h5><a class="nav-link" href="#">Media</a></h5>
+                    <h5><a class="nav-link" href="/library-media">Media</a></h5>
                 </li>
-              </ul>
-
-              <div class="my-3 p-3 bg-white rounded box-shadow">
-                <h6 class="border-bottom border-gray pb-2 mb-0">Recent updates</h6>
-                <div class="media text-muted pt-3">
-                  <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <a href="https://www.babysfirsttest.org/newborn-screening/conditions/classic-phenylketonuria-pku">Baby's First Test</a>
-                  </p>
+            </ul>
+            <div class="row border-bottom ">
+                <div id="content-list" class="col-md-5"></div>
+                <div class="col-md-7 pt-3 border-left">
+                    <iframe id="preview-frame" src="https://newbornscreening.health.utah.gov/disorders/pku/" width="100%" height="1000px" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
                 </div>
-                <div class="media text-muted pt-3">
-                  <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
-                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@username</strong>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                  </p>
-                </div>
-                <div class="media text-muted pt-3">
-                  <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
-                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@username</strong>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                  </p>
-                </div>
-                <small class="d-block text-right mt-3">
-                  <a href="#">All updates</a>
-                </small>
-              </div>
-
-              <div id="library-content">
-                <iframe src="https://www.babysfirsttest.org/newborn-screening/conditions/classic-phenylketonuria-pku"></iframe>
-              </div>
-
-          </div>
-            <!-- /.container -->
-
-
-            <!-- FOOTER -->
-            <footer class="container">
-              <p class="float-right"><a href="#">Back to top</a></p>
-              <p>&copy; 2020 Eilbeck Lab, Department of Biomedical Informatics, University of Utah | Utah Department of Health &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-            </footer>
-        </main>
-      </div>
-    </div>
-    <!-- JS links -->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="js/script.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Icons -->
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script>
-      feather.replace()
-    </script>
-  </body>
+            </div>
+        </div>
+        <br><br><br><br>
+        <!-- FOOTER -->
+        <footer class="container">
+            <p class="float-right"><a href="#">Back to top</a></p>
+            <p>&copy; 2020 Eilbeck Lab, Department of Biomedical Informatics, University of Utah | Utah Department of Health &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        </footer>
+    </main>
+</div>
+</div>
+<!-- JS links -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+feather.replace()
+</script>
+</body>
 </html>

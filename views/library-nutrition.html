@@ -14,7 +14,7 @@
     <link href="css/dashboard.css" rel="stylesheet">
 </head>
 
-<body onload="loadCommunity(<%= content %>)">
+<body onload="loadLibrary('nutrition',<%= content %>)">
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-2 d-md-block bg-light sidebar">
@@ -50,7 +50,7 @@
             </h6>
             <ul class="nav flex-column mb-2">
                 <li class="nav-item">
-                    <a class="nav-link" href="/library">
+                    <a class="nav-link active" href="#">
                         <span data-feather="book-open"></span>
                         Knowledge Library
                     </a>
@@ -62,7 +62,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link" href="/community">
                         <span data-feather="smile"></span>
                         Community
                     </a>
@@ -84,7 +84,6 @@
         </div>
     </nav>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pl-0 pr-0">
-
         <div id="myCarousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -94,10 +93,10 @@
                 <div class="carousel-item active">
                     <div class="container">
                         <div class="carousel-caption">
-                            <h1>Community</h1>
-                            <h3>Connect with national organizations, advocacy groups, and other parents online through social media</h3>
+                            <h1>Knowledge Library</h1>
                             <br>
-                            <p><a class="btn btn-lg btn-outline-light" href="https://rarediseases.org/rare-diseases/phenylketonuria/" role="button">Visit NORD</a></p>
+                            <h3>Find and access useful articles from credible sources</h3>
+                            <br><br><br>
                         </div>
                     </div>
                 </div>
@@ -109,7 +108,6 @@
                         <div id="timeline"></div>
                     </div>
                 </div>
-
             </div>
             <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -120,19 +118,29 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-
-        <div class="container marketing">
-
-            <!-- Three columns of text below the carousel -->
-            <div class="row">
-                <div id="sources" class="col-md-4"></div>
-                <div class="col-md-8">
-                    <iframe style="padding-left:100px;"src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FNationalPKUAlliance&tabs=timeline&width=500&height=1500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+        <div style="padding-left:20px;padding-right:20px;">
+            <ul class="nav nav-tabs">
+                <li class="nav-item mb-0">
+                    <h5><a class="nav-link" href="/library">Basic Knowledge</a></h5>
+                </li>
+                <li class="nav-item mb-0">
+                    <h5><a class="nav-link active" href="#">Nutrition</a></h5>
+                </li>
+                <li class="nav-item mb-0">
+                    <h5><a class="nav-link" href="/library-research">Research</a></h5>
+                </li>
+                <li class="nav-item mb-0">
+                    <h5><a class="nav-link" href="/library-media">Media</a></h5>
+                </li>
+            </ul>
+            <div class="row border-bottom ">
+                <div id="content-list" class="col-md-5"></div>
+                <div class="col-md-7 pt-3 border-left">
+                    <iframe id="preview-frame" src="https://depts.washington.edu/pku/about/diet.html" width="100%" height="1000px" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
                 </div>
             </div>
-            <br><br><br><br>
         </div>
-
+        <br><br><br><br>
         <!-- FOOTER -->
         <footer class="container">
             <p class="float-right"><a href="#">Back to top</a></p>
