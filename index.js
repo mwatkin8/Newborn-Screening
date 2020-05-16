@@ -150,7 +150,7 @@ app.get('/community', async (request, response) => {
     response.render('community',{content:content});
 });
 app.get('/account', async (request, response) => {
-  response.render('account',{fname:fname,lname:lname,rel:rel,rel_display:rel_display,method:method,email:email,phone:phone});
+  response.render('account-info',{fname:fname,lname:lname,rel:rel,rel_display:rel_display,method:method,email:email,phone:phone});
 });
 
 async function getResource(url){

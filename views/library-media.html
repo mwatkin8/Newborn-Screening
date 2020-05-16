@@ -134,9 +134,9 @@
                 </li>
             </ul>
             <div class="row border-bottom ">
-                <div id="content-list" class="col-md-5"></div>
+                <div id="content-list" class="loading col-md-5"></div>
                 <div class="col-md-7 pt-3 border-left">
-                    <iframe id="preview-frame" src="https://newbornscreening.health.utah.gov/news/" width="100%" height="1000px" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+                    <iframe id="preview-frame" onload="removeLoading()" class="loading" src="https://newbornscreening.health.utah.gov/news/" width="100%" height="1000px" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
                 </div>
             </div>
         </div>

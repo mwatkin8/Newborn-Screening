@@ -14,7 +14,7 @@
     <link href="css/dashboard.css" rel="stylesheet">
 </head>
 
-<body onload="loadLibrary('nutrition',<%= content %>)">
+<body onload="accountDetail('<%= rel %>','<%= rel_display %>','<%= method %>')">
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-2 d-md-block bg-light sidebar">
@@ -50,7 +50,7 @@
             </h6>
             <ul class="nav flex-column mb-2">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link" href="/library">
                         <span data-feather="book-open"></span>
                         Knowledge Library
                     </a>
@@ -74,7 +74,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/account">
+                    <a class="nav-link active" href="/#">
                         <span data-feather="settings"></span>
                         Account Information
                     </a>
@@ -93,9 +93,9 @@
                 <div class="carousel-item active">
                     <div class="container">
                         <div class="carousel-caption">
-                            <h1>Knowledge Library</h1>
+                            <h1>Account Information</h1>
                             <br>
-                            <h3>Find and access useful articles from credible sources</h3>
+                            <h3>Modify your user details</h3>
                             <br><br><br>
                         </div>
                     </div>
@@ -118,27 +118,90 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-        <div style="padding-left:20px;padding-right:20px;">
-            <ul class="nav nav-tabs">
-                <li class="nav-item mb-0">
-                    <h5><a class="nav-link" href="/library">Basic Knowledge</a></h5>
-                </li>
-                <li class="nav-item mb-0">
-                    <h5><a class="nav-link active" href="#">Nutrition</a></h5>
-                </li>
-                <li class="nav-item mb-0">
-                    <h5><a class="nav-link" href="/library-research">Research</a></h5>
-                </li>
-                <li class="nav-item mb-0">
-                    <h5><a class="nav-link" href="/library-media">Media</a></h5>
-                </li>
-            </ul>
-            <div class="row border-bottom ">
-                <div id="content-list" class="loading col-md-5"></div>
-                <div class="col-md-7 pt-3 border-left">
-                    <iframe id="preview-frame" onload="removeLoading()" class="loading" src="https://depts.washington.edu/pku/about/diet.html" width="100%" height="1000px" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+        <div class="row">
+          <div style="padding:20px"class="col-md-12 ml-3">
+            <div>
+              <h5>User Full Name</h5>
+            </div>
+            <div style="padding:5px" class="row">
+                <div class="col-md-4">
+                  <input type="text" id="primary-fname" class="form-control" placeholder="<%= fname %>">
+                </div>
+                <div class="col-md-4">
+                  <input type="text" id="primary-lname" class="form-control" placeholder="<%= lname %>">
                 </div>
             </div>
+            <div style="padding-top:10px;">
+              <h5>Relationship with Newborn</h5>
+            </div>
+            <div style="padding-bottom:5px" class="row">
+                <div class="col-md-4">
+                  <select class="text-muted" id="primary-rel">
+                      <option value="">Select...</option>
+                      <option value="NMTH">Natural Mother</option>
+                      <option value="NFTH">Natural Father</option>
+                      <option value="ADOPTM">Adoptive Mother</option>
+                      <option value="ADOPTF">Adoptive Father</option>
+                      <option value="MGRMTH">Maternal Grandmother</option>
+                      <option value="MGRFTH">Maternal Grandfather</option>
+                      <option value="PGRMTH">Paternal Grandmother</option>
+                      <option value="PGRFTH">Paternal Grandfather</option>
+                      <option value="FRND">Unrelated Friend</option>
+                      <option value="O">Other</option>
+                  </select>
+                </div>
+                <div class="col-md-4"><input type="text" id="primary-rel-other" class="form-control" placeholder="If other, please specify"></div>
+            </div>
+            <div style="padding-top:10px;">
+              <h5>Email</h5>
+            </div>
+            <div style="padding-bottom:5px" class="row">
+                <div class="col-md-4">
+                  <input type="email" id="primary-email" class="form-control" placeholder="<%= email %>">
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div style="padding-top:10px;">
+              <h5>Phone number</h5>
+            </div>
+            <div style="padding-bottom:5px" class="row">
+                <div class="col-md-4">
+                  <input class="text-muted" type="tel" id="primary-phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="<%= phone %>" required>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div style="padding-top:10px;">
+              <h5>Preferred Contact Method</h5>
+            </div>
+            <div style="padding-bottom:5px" class="row">
+                <div class="col-md-4">
+                    <input id="sms" type="radio" name="mode" value="text"> SMS
+                    &emsp;&emsp;<input id="phone" type="radio" name="mode" value="call"> Automated phone call
+                </div>
+            </div>
+            <div style="padding-top:20px;" class="row">
+                <div class="col-md-2">
+                  <button id="myBtn" type="button" onclick="activateStep4()" class="btn btn-md btn-secondary btn-block">Change Password</button>
+                  <!-- The Modal -->
+                  <div id="myModal" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                      <span class="close">&times;</span>
+                      <p>Some prompt to change password..</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <br><br><br>
+            <div class="row">
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <button type="button" onclick="activateStep4()" class="btn btn-md btn-outline-primary btn-block">Save Changes</button>
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+          </div>
         </div>
         <br><br><br><br>
         <!-- FOOTER -->

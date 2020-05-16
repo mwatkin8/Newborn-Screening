@@ -1,7 +1,12 @@
+function removeLoading(){
+    d3.select('#preview-frame').classed('loading',false);
+}
+
 function loadLibrary(type,content){
     drawTimeline()
     content.library[type].forEach((source, i) => {
         let list = d3.select('#content-list');
+        list.classed('loading',false);
         let row = list.append('div').attr('class','row media text-muted pt-3 pb-3 border-bottom border-gray');
         let img = row.append('div').attr('class','col-md-2');
         img.append('img').attr('src','img/content-imgs/' + content.condition +'/library/' + source.image).attr('width','70').attr('height','70').attr('class','mr-2 rounded');
@@ -55,6 +60,7 @@ function loadCommunity(content){
 }
 
 async function accountDetail(rel,rel_display,method){
+    drawTimeline();
   let options = d3.selectAll('option');
   options._groups[0].forEach(option => {
     if(option.value === rel){
@@ -69,6 +75,32 @@ async function accountDetail(rel,rel_display,method){
   }
   if(method === 'phone'){
     d3.select('#phone').attr('checked','checked');
+  }
+}
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
   }
 }
 
