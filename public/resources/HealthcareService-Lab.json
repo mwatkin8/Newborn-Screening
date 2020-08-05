@@ -1,0 +1,14 @@
+{
+  "resourceType" : "HealthcareService",
+  "id" : "healthcareservice-lab",
+  "identifier": [
+    {
+        "system" : "resultsmyway",
+        "value" : "results-demo"
+    }
+  ],
+  "location" : [{
+      "reference" : "Location/location-lab"
+  }],
+  "name" : "OMNILab"
+}

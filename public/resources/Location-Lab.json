@@ -1,0 +1,12 @@
+{
+  "resourceType" : "Location",
+  "id" : "location-lab",
+  "identifier" : [
+      {
+          "system" : "resultsmyway",
+          "value" : "results-demo"
+      }
+],
+  "name" : "NBS Lab",
+  "alias" : ["UTAH"]
+}

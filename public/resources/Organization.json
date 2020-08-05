@@ -1,0 +1,11 @@
+{
+  "resourceType" : "Organization",
+  "id" : "uhin-organization",
+  "identifier" : [
+      {
+          "system" : "resultsmyway",
+          "value" : "results-demo"
+      }
+],
+  "alias" : ["UHIN"]
+}

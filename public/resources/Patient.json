@@ -1,0 +1,36 @@
+{
+  "resourceType": "Patient",
+  "id" : "nbs-patient",
+  "identifier": [
+    {
+        "system" : "resultsmyway",
+        "value" : "results-demo"
+    },
+    {
+      "system": "Utah NBS System",
+      "value": "UT159C009 MR"
+    }
+  ],
+  "name": [
+    {
+      "text": "Charm Uhin",
+      "family": "Uhin",
+      "given": [
+        "Charm"
+      ]
+    }
+  ],
+  "gender": "male",
+  "birthDate": "2020-05-31",
+  "address": [
+    {
+      "line": [
+        "123 Test Street"
+      ],
+      "city": "Salt Lake City",
+      "state": "Utah",
+      "postalCode": "84111",
+      "country": "US"
+    }
+  ]
+}

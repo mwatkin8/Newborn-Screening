@@ -1,0 +1,15 @@
+{
+  "resourceType" : "Location",
+  "id" : "location-hospital",
+  "identifier" : [
+      {
+          "system" : "resultsmyway",
+          "value" : "results-demo"
+      },
+      {
+      "system" : "http://hl7.org/fhir/sid/us-npi",
+      "value" : "1962412486"
+  }
+],
+  "name" : "Alta View Hospital"
+}

@@ -1,0 +1,14 @@
+{
+  "resourceType" : "HealthcareService",
+  "id" : "healthcareservice-hospital",
+  "identifier": [
+    {
+        "system" : "resultsmyway",
+        "value" : "results-demo"
+    }
+  ],
+  "location" : [{
+      "reference" : "Location/location-hospital"
+  }],
+  "name" : "LAB"
+}

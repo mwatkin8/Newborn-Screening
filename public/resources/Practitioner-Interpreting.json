@@ -1,0 +1,19 @@
+{
+  "resourceType": "Practitioner",
+  "id" : "practitioner-interpreting",
+  "identifier" : [
+      {
+          "system" : "resultsmyway",
+          "value" : "results-demo"
+      }
+],
+  "name": [
+    {
+      "use": "usual",
+      "family": "Wallis",
+      "given": [
+        "Heidi"
+      ]
+    }
+  ]
+}

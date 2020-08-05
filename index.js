@@ -2,6 +2,7 @@ let express = require('express');
 let path = require('path');
 let fetch = require('node-fetch')
 let fs = require('fs');
+let hl7parser = require("hl7parser");
 let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
@@ -93,7 +94,12 @@ app.get('/home', async (request, response) => {
   response.render('home',{user:r.name[0].text,rel:r.relationship[0].coding[0].display,nb:nb_name})
 });
 
-app.get('/results', async (request, response) => {response.render('results');});
+app.get('/results', async (request, response) => {
+    var message = hl7parser.create("MSH|^~\&|OMNILab|UTAH|LAB|UHIN|20200604175840||ORU^R01^ORU_R01|784652|P|2.4|||||||||UHIN Results~1830202\rPID|1||UT159C009^^^^MR||Uhin^Charm^^^||20200531|M||^|123 Test Street^^SLC^UT^84111^^C|||||||||||||N||||||N");
+    console.log(message.get("PID.5.2").toString()); // prints "Bob"
+    response.render('results');
+});
+
 app.get('/team', async (request, response) => {response.render('team');});
 app.get('/library', async (request, response) => {
     let content;
@@ -267,7 +273,6 @@ async function createReport(){
 
 async function displayReport(){
 
-
     document.getElementById('main-content').innerHTML = '<img style="padding-left:350px;" src="../img/loader.gif"/>';
     let url = window.server + '/DiagnosticReport?_id=' + window.reportID;
     let bundle = await getResource(url);
@@ -283,6 +288,10 @@ async function displayReport(){
     let file = window.URL.createObjectURL(blob);
     document.getElementById('main-content').innerHTML = '<iframe id="frame" width="100%" height="800px" src="' + file + '"></iframe>'
 }
+
+
+
+
 /*
 //-------SMART launch params---------
 let client = "PUT-CLIENT-ID-HERE"; //Given by sandbox when registering

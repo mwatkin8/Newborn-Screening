@@ -1,0 +1,26 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "nbs-servicerequest",
+  "status": "completed",
+  "intent": "original-order",
+  "subject": {
+    "reference": "Patient/nbs-patient"
+  },
+  "encounter": {
+    "reference": "Encounter/nbs-encounter"
+  },
+  "authoredOn": "2020-06-01T00:00:00-07:00",
+  "requester": {
+    "reference": "Practitioner/practitioner-ordering"
+},
+  "locationReference": [
+    {
+      "reference": "Location/location-lab"
+    }
+  ],
+  "specimen": [
+    {
+      "reference": "Specimen/nbs-specimen"
+    }
+  ]
+}

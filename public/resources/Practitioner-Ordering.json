@@ -1,0 +1,19 @@
+{
+  "resourceType": "Practitioner",
+  "id" : "practitioner-ordering",
+  "identifier" : [
+      {
+          "system" : "resultsmyway",
+          "value" : "results-demo"
+      }
+],
+  "name": [
+    {
+      "use": "usual",
+      "family": "Duffy",
+      "given": [
+        "Timothy"
+      ]
+    }
+  ]
+}

@@ -1,9 +1,97 @@
+async function loadRecords(){
+    let response = await fetch('/resources/submission-bundle.json');
+    let submission = await response.json();
+    let params = {
+        method:"POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(submission)
+    };
+    response = await fetch('https://api.logicahealth.org/nbs/open/', params);
+    r = await response.json();
+    console.log(r);
+}
+
+//FOR DEMO PURPOSES ONLY
+async function deleteRecords(){
+    let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
+    let bundle = await fetchResource(url);
+    let patient = bundle.entry[0].resource.id;
+    //Bundle
+    url = 'https://api.logicahealth.org/nbs/open/Bundle?identifier=784652';
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //DiagnosticReport
+    url = 'https://api.logicahealth.org/nbs/open/DiagnosticReport?subject=' + patient;
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //Observations
+    url = 'https://api.logicahealth.org/nbs/open/Observation?subject=' + patient;
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //ServiceRequest
+    url = 'https://api.logicahealth.org/nbs/open/ServiceRequest?subject=' + patient;
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //Encounter
+    url = 'https://api.logicahealth.org/nbs/open/Encounter?subject=' + patient;
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //HealthcareService
+    url = 'https://api.logicahealth.org/nbs/open/HealthcareService?identifier=results-demo';
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //Practitioner
+    url = 'https://api.logicahealth.org/nbs/open/Practitioner?identifier=results-demo';
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //Organization
+    url = 'https://api.logicahealth.org/nbs/open/Organization?identifier=results-demo';
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //Location
+    url = 'https://api.logicahealth.org/nbs/open/Location?identifier=results-demo';
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //Specimen
+    url = 'https://api.logicahealth.org/nbs/open/Specimen?subject=' + patient;
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+    //Patient
+    url = 'https://api.logicahealth.org/nbs/open/Patient?_id=' + patient;
+    bundle = await fetchResource(url);
+    await deleteResource(bundle)
+}
+
+async function fetchResource(url){
+    response = await fetch(url);
+    return await response.json();
+}
+
+async function deleteResource(bundle){
+    bundle.entry.forEach(async (entry, i) => {
+        let type = entry.resource.resourceType;
+        let id = entry.resource.id;
+        console.log(id);
+        let url = 'https://api.logicahealth.org/nbs/open/' + type + '/' + id
+        let response = await fetch(url, {
+            method : 'DELETE'
+        });
+        let r = await response.json();
+        console.log(r);
+    });
+}
+
 function removeLoading(){
     d3.select('#preview-frame').classed('loading',false);
 }
 
 function loadLibrary(type,content){
     drawTimeline()
+    if(type === 'research'){
+        fetchRss('https://pubmed.ncbi.nlm.nih.gov/rss/search/1DYWH3zMZml9Y-GH5h46gjnQXutviZuz-BCA7P5SX1gD_xlsh7/?limit=100&utm_campaign=pubmed-2&fc=20200722104350');
+    }
     content.library[type].forEach((source, i) => {
         let list = d3.select('#content-list');
         list.classed('loading',false);

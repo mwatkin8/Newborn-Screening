@@ -1,0 +1,47 @@
+{
+  "resourceType" : "Encounter",
+  "id" : "nbs-encounter",
+  "status" : "finished",
+  "class" : {
+      "system" : "http://terminology.hl7.org/CodeSystem/v2-0004",
+      "code" : "U",
+      "display" : "Unknown"
+  },
+  "subject" : {
+      "reference" : "Patient/nbs-patient"
+  },
+  "participant" : [
+    {
+        "type" : [{
+                "system" : "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+                "code" : "PPRF",
+                "display" : "primary performer"
+            }],
+        "individual" : {
+            "reference" : "Practitioner/practitioner-ordering"
+        }
+    },
+    {
+        "type" : [{
+                "system" : "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+                "code" : "CON",
+                "display" : "consultant"
+            }],
+        "individual" : {
+            "reference" : "Practitioner/practitioner-interpreting"
+        }
+    }
+  ],
+  "period" : {
+      "start" : "2020-06-01T00:00:00-07:00",
+      "end" : "2020-06-04T17:58:40-07:00"
+  },
+  "location" : [{
+    "location" : {
+        "reference" : "Location/location-hospital"
+    }
+  }],
+  "serviceProvider" : {
+      "reference" : "Organization/uhin-organization"
+  }
+}
