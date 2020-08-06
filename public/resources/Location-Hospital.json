@@ -8,8 +8,8 @@
       },
       {
       "system" : "http://hl7.org/fhir/sid/us-npi",
-      "value" : "1962412486"
+      "value" : ""
   }
 ],
-  "name" : "Alta View Hospital"
+  "name" : ""
 }

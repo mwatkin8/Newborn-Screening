@@ -1,6 +1,6 @@
 {
   "resourceType": "Observation",
-  "id": "nbs-observation1-3",
+  "id": "",
   "basedOn": [
     {
       "reference": "ServiceRequest/nbs-servicerequest"
@@ -20,8 +20,8 @@
     "coding": [
       {
         "system": "http://loinc.org",
-        "code": "58088-6",
-        "display": "Acylcarnitine Profile"
+        "code": "",
+        "display": ""
       }
     ]
   },
@@ -32,17 +32,7 @@
     "reference": "Encounter/nbs-encounter"
   },
   "effectiveDateTime": "2020-06-01T00:00:00-07:00",
-  "valueCodeableConcept": {
-      "coding": [
-            {
-                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-                "code": "N",
-                "display": "Normal"
-            }
-        ],
-        "text": "Normal"
-  },
   "note": {
-      "text" : "Observation Result Status: F (Final results; Can only be changed with a corrected result.)"
+      "text" : ""
   }
 }

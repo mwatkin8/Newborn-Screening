@@ -6,23 +6,23 @@
                 "coding": [
           			{
           				"system": "http://hl7.org/fhir/message-type",
-          				"code": "ORU^R01",
-          				"display": "ORU_R01|2.4"
+          				"code": "",
+          				"display": ""
           			},
                     {
           				"system": "http://uhin-sample-site.org/lab/message-profiles",
-          				"code": "1830202",
-          				"display": "UHIN Results~1830202"
+          				"code": "",
+          				"display": ""
           			}
       		    ]
             },
             "system" : "http://uhin-sample-site.org/lab/messages",
-            "value" : "784652",
+            "value" : "",
             "assigner" : {
                 "reference" : "Organization/uhin-organization"
             }
         },
         "type" : "collection",
-        "timestamp" : "2020-06-04T17:58:40-07:00",
+        "timestamp" : "",
         "entry": []
     }

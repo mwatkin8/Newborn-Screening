@@ -1,0 +1,65 @@
+Current ORU from DEV system
+
+PENDING CHANGES:
+>Addition of PDF
+>Use NPI# for HCP not LW#
+>Update OBR segment formatting of 7566-6 DBS
+>Incorporate LOINC answers (in place of local codes) in interpretation OBXs
+
+MSH|^~\&|OMNILab|UTAH|LAB|UHIN|20200604175840||ORU^R01^ORU_R01|784652|P|2.4|||||||||UHIN Results~1830202
+PID|1||UT159C009^^^^MR||Uhin^Charm^^^||20200531|M||^|123 Test Street^^SLC^UT^84111^^C|||||||||||||N||||||N
+NK1|1|Wallis^Heidi|MTH^Mother||8017128282^PRN^PH|||||||||||19950604||||||||||||^
+PV1|1|U|1962412486^^^^^^^^Alta View Hospital|||||||||||||||||||||||||||||||||||||||||20200601
+ORC|RE||F1590009202099||CM|||||||LW3166(*Change to NPI#)^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099|57794-0^Newborn Screening Panel^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041726|||C||^^^^^R|||||39&Wallis& Heidi
+NTE|1|L|This is a comment in the 57794-0 NBS panel.|RE
++PDF
+OBX|1|CE|57130-7=^Overall Determination^L|1|A^ABNORMAL^L||||||F||0|20200601
+OBX|2|CE|46733-2^Amino Acid Profile^LN|1|A^ABNORMAL^L|||A|||C||0|20200601
+OBX|3|CE|58088-6^Acylcarnitine Profile^LN|2|N^Normal^L||||||C||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099| 57087-9^BTD Panel^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041721|||F||^^^^^U|||||30&AUTHORIZATION& AUTO
+NTE|1|L|This is a BTDR comment.|RE
+NTE|2|L|To ascertain the significance of this result please collect the second newborn screen between 7 and 16 days of age. ACTION: REPEAT SCREEN|RE
+OBX|1|CE| 46761-3^Biotinidase Deficiency Interpretation^LN|1|I^INDETERMINATE^L|||A|||F||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099| 54079-9^GALT Panel ^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041722|||F||^^^^^U|||||30&AUTHORIZATION& AUTO
+NTE|1|L|This is a GALT repeat comment.|RE
+NTE|2|L|Results indicate this newborn may have galactosemia. Additional testing and referral to the Metabolic Clinic at Primary Children's Hospital (801-585-2457) is recommended. ACTION: GALACTOSEMIA PANEL AND  REFERRAL TO METABOLIC CLINIC|RE
+OBX|1|CE| 46737-3^Galactosemia Interpretation^LN|1|A^ABNORMAL^L|||A|||F||0|20200601
+OBX|2|NM| 42906-8^Enzyme Activity^LN|2|1|U/gHb|3-20|L|||F||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099| 57086-1^CAH Panel^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041722|||F||^^^^^U|||||30&AUTHORIZATION& AUTO
+NTE|1|L|This is a CAH 2nd tier comment.|RE
+NTE|2|L|Results indicate this newborn may have congenital adrenal hyperplasia. Additional testing and referral to Pediatric Endocrinology at Primary Childrens Hospital(8012133599) is recommend. ACTION: PLASMA 17-HYDROXYPROGESTERONE AND REFERRAL TO ENDOCRINOLOGY|RE
+OBX|1|CE|46758-9^Congenital Adrenal Hyperplasia Interpretation^LN|1|A^ABNORMAL^L|||A|||F||0|20200601
+OBX|2|NM|38473-5^17-OHP^LN|2|29|ng/mL|<12.501|H|||F||0|20200601
+OBX|3|NM|53336-4^17OHP Ratio^LN|3|33||||||F||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099|54090-6^TSH Panel^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041722|||F||^^^^^U|||||30&AUTHORIZATION& AUTO
+NTE|1|L|This is a TSH Panel Rpt comment.|RE
+NTE|2|L|To ascertain the significance of this result please collect the second newborn screen between 7 and 16 days of age. ACTION: REPEAT SCREEN|RE
+OBX|1|CE|46762-1^Congenital Hypothyroidism Interpretation^LN|1|I^INDETERMINATE^L|||A|||F||0|20200601
+OBX|2|NM|29575-8^TSH^LN|2|62|uIU/mL|0-40|H|||F||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099|54078-1^CF Panel Repeat^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041723|||F||^^^^^U|||||30&AUTHORIZATION& AUTO
+NTE|1|L|This is a CF repeat comment.|RE
+NTE|2|L|To ascertain the significance of this result please collect the second newborn screen between 7 and 16 days of age. ACTION: REPEAT SCREEN|RE
+OBX|1|NM|48633-2^IRT^LN|1|83|ng/mL|<51|H|||F||0|20200601
+OBX|2|CE|46769-6^Cystic Fibrosis Interpretation^LN|2|I^INDETERMINATE^L|||A|||F||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099|54081-5^Hemoglobinopathies Panel^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041725|||F||^^^^^U|||||39&Wallis& Heidi
+NTE|1|L|This is a HB panel repeat comment.|RE
+OBX|1|CE|46740-7^Hemoglobinopathies Interpretation^LN|1|FAE^Abnormal - FAE^L|||A|||F||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099|62333-0^SCID Panel^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041724|||F||^^^^^U|||||30&AUTHORIZATION& AUTO
+NTE|1|L|This is a SCID panel repeat comment|RE
+NTE|2|L|Inconclusive results due to low concentrations of TREC and reference gene were detected. A repeat screen is recommended. ACTION: REPEAT SCREEN|RE
+OBX|1|NM|92007-4^TREC-Z Rpt^LN|1|10.89||<2.8|H|||F||0|20200601
+OBX|2|CE|62321-5^SCID Interpretation^LN|2|I^INDETERMINATE^L|||A|||F||0|20200601
+ORC|RE||F1590009202099||CM|||||||LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^
+OBR|1||F1590009202099|92005-8^SMA Panel^LN|||20200601|||||||202006040028|DBS&Dried blood spot card [79566-6]^^^&|LW3166^DUFFY^TIMOTHY^^^^^^HC^^^^^||||||202006041724|||F||^^^^^U|||||30&AUTHORIZATION& AUTO
+NTE|1|L|Thisis a SMA panel repeat comment.|RE
+NTE|2|L|Reference gene and SMN1 were undetectable, therefore the result for SMA is indeterminate. ACTION:REPEAT SCREEN|RE
+OBX|1|NM|92002-5^SMN1^LN|1|35.00|Cycles|<33.2|H|||F||0|20200601
+OBX|2|CE|92004-1^Spinal Muscular Atrophy Interpretation^L|2|I^INDETERMINATE^L|||A|||F||0|20200601

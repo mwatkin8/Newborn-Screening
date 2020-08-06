@@ -3,14 +3,12 @@
   "id" : "nbs-specimen",
   "type" : {
       "system" : "http://loinc.org",
-      "code" : "79566-6",
+      "code" : "",
       "display" : "Collection method - DBS"
   },
   "subject" : {
       "reference" : "Patient/nbs-patient"
   },
-  "receivedTime" : "2020-06-04T00:28:00-07:00",
-  "processing" : [{
-    "timeDateTime" : "2020-06-04T17:26:00-07:00"
-  }]
+  "receivedTime" : "",
+  "processing" : []
 }

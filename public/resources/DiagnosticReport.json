@@ -1,29 +1,26 @@
 {
       "resourceType": "DiagnosticReport",
-      "id": "nbs-diagnosticreport-1",
+      "id": "",
       "identifier": [
         {
           "system": "http://uhin-sample-site.org/lab/filler-orders",
-          "value": "F1590009202099"
+          "value": ""
         }
       ],
-      "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/ORU_R01-comment|2.6",
-          "valueString" : "Comment: This is a comment in the 57794-0 NBS panel.\nSource: L (Ancillary (filler) department is source of comment)\nType: RE (Remark)"
-      }],
+      "extension" : [],
       "basedOn": [
         {
           "reference": "ServiceRequest/nbs-servicerequest"
         }
       ],
       "status": "partial",
-      "effectiveDateTime" : "2020-06-04T17:58:40-07:00",
+      "effectiveDateTime" : "",
       "code": {
         "coding": [
           {
             "system": "http://loinc.org",
-            "code": "57794-0",
-            "display": "Newborn Screening Panel"
+            "code": "",
+            "display": ""
           }
         ]
       },
@@ -33,23 +30,18 @@
       "encounter": {
         "reference": "Encounter/nbs-encounter"
     },
+    "resultsInterpreter": [
+        {
+            "reference": "Practitioner/practitioner-interpreting"
+        }
+    ],
       "specimen": [
         {
           "reference": "Specimen/nbs-specimen"
         }
       ],
-      "result": [
-        {
-          "reference": "Observation/nbs-observation1-1"
-        },
-        {
-          "reference": "Observation/nbs-observation1-2"
-        },
-        {
-          "reference": "Observation/nbs-observation1-3"
-        }
-      ],
-      "conclusion": "Result status: C (Record coming over is a correction and thus replaces a final result)\nQuantity/Timing: ^^^^^R",
+      "result": [],
+      "conclusion": "",
       "presentedForm": [
         {
           "contentType": "application/msword",

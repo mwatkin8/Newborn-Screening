@@ -8,28 +8,28 @@
     },
     {
       "system": "Utah NBS System",
-      "value": "UT159C009 MR"
+      "value": ""
     }
   ],
   "name": [
     {
-      "text": "Charm Uhin",
-      "family": "Uhin",
+      "text": "",
+      "family": "",
       "given": [
-        "Charm"
+        ""
       ]
     }
   ],
   "gender": "male",
-  "birthDate": "2020-05-31",
+  "birthDate": "",
   "address": [
     {
       "line": [
-        "123 Test Street"
+        ""
       ],
-      "city": "Salt Lake City",
-      "state": "Utah",
-      "postalCode": "84111",
+      "city": "",
+      "state": "",
+      "postalCode": "",
       "country": "US"
     }
   ]

@@ -10,5 +10,5 @@
   "location" : [{
       "reference" : "Location/location-hospital"
   }],
-  "name" : "LAB"
+  "name" : ""
 }

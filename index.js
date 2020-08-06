@@ -95,8 +95,6 @@ app.get('/home', async (request, response) => {
 });
 
 app.get('/results', async (request, response) => {
-    var message = hl7parser.create("MSH|^~\&|OMNILab|UTAH|LAB|UHIN|20200604175840||ORU^R01^ORU_R01|784652|P|2.4|||||||||UHIN Results~1830202\rPID|1||UT159C009^^^^MR||Uhin^Charm^^^||20200531|M||^|123 Test Street^^SLC^UT^84111^^C|||||||||||||N||||||N");
-    console.log(message.get("PID.5.2").toString()); // prints "Bob"
     response.render('results');
 });
 
