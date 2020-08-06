@@ -40,7 +40,8 @@ async function closeModal(type){
 
 async function loadUserORU(){
     let message = d3.select('#modal-text').node().value;
-    parseMessage(message);
+    closeModal('enter')
+    await parseMessage(message);
 }
 async function loadSampleORU(){
     let r = await fetch('sample.txt');
@@ -120,6 +121,7 @@ async function parseMessage(message){
     //Put all resources into a bundle to store on server
     await assembleBundle();
     await assembleSubmit();
+    alert('Resources created on server!')
 }
 
 async function createReportTemplates(d_count){
@@ -474,6 +476,8 @@ async function deleteRecords(){
         url = 'https://api.logicahealth.org/nbs/open/Location?identifier=results-demo';
         bundle = await fetchResource(url);
         await deleteResource(bundle)
+
+        alert('Resources deleted from server.')
     }
     else{
         alert('Sample data has not been loaded yet.');
