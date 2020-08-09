@@ -25,6 +25,8 @@
       }
     ]
   },
+  "referenceRange": [],
+  "interpretation": [],
   "subject": {
     "reference": "Patient/nbs-patient"
   },

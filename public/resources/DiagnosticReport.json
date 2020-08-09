@@ -5,7 +5,11 @@
         {
           "system": "http://uhin-sample-site.org/lab/filler-orders",
           "value": ""
-        }
+      },
+      {
+          "system": "resultsmyway",
+          "value": "nbs-report"
+      }
       ],
       "extension" : [],
       "basedOn": [

@@ -92,8 +92,7 @@ body {
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 
 .title {
-    color: black;
-	font-family: Segoe;
+	font-family: Tahoma, Geneva, sans-serif;
 }
 
 /* The Modal (background) */
@@ -119,4 +118,69 @@ body {
   width: 80%; /* Could be more or less, depending on screen size */
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+.main-about{
+  padding-top: 25px;
+  padding-left: 200px;
+  width: 80%;
+}
+
+.fhir-box{
+  padding: 10px;
+
+}
+
+ul{
+    list-style: none;
+}
+.fhir-li{
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+}
+.fhir-li:hover{
+    cursor: pointer;
+    background-color:#edf6ff;
+}
+
+.fhir-p{
+    margin: 0;
+}
+
+.top{
+    border-top: 1px solid lightgray;
+}
+
+.view-box{
+  padding: 10px;
+  border: 1px solid lightgray;
+  height: 100%;
+  overflow: scroll;
+}
+
+.selected{
+    background-color: #edf6ff;
+}
+
+/* Style for d3 charts */
+.chart-gauge {
+  width: 200px;
+  margin: 10px auto;
+}
+
+.chart-color1 {
+  fill: #7659F5; //purple
+}
+
+.chart-color2 {
+  fill: #6dc775; //green
+}
+
+.chart-color3 {
+  fill: #ff8a80; //red
+}
+
+.needle,
+.needle-center {
+  fill: #464A4F;
 }

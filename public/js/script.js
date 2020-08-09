@@ -1,19 +1,337 @@
-async function resultSummary(){
+async function resultInit(){
+    drawTimeline();
+    deleteRecords();
+    resultSummary();
+}
 
+async function resultSummary(){
+    let div = d3.select('#result-content');
+    div.html('');
+    d3.select('#nav-summary').classed('active',true);
+    d3.select('#nav-pdf').classed('active',false);
+    d3.select('#nav-fhir').classed('active',false);
+    if(bundle === undefined){
+        div.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
+    }
+    else{
+        let row = div.append('div').attr('class','row');
+        let col = row.append('div').attr('class','col-md-12').style('display','block');
+        let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
+        let bundle = await fetchResource(url);
+        let r = bundle.entry[0].resource;
+        //Patient name
+        let name = r.name[0].given[0] + ' ' + r.name[0].family;
+        let header = col.append('div').style('vertical-align','middle').style('display','inline-block');
+        header.append('h4').text(name);
+        let dem = header.append('h6');
+        let gender = r.gender;
+        //Age in days
+        let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        let dob = new Date(r.birthDate)
+        let today = new Date();
+        let age = Math.round(Math.abs((dob - today) / oneDay));
+        //Gender
+        dem.append('i').text(age + ' day-old ' + gender)
+        url = 'https://api.logicahealth.org/nbs/open/Practitioner?identifier=results-demo';
+        bundle = await fetchResource(url);
+        let ordering,interpreting;
+        bundle.entry.forEach((entry, i) => {
+            if(entry.resource.identifier.length > 1){
+                ordering = entry.resource;
+            }
+            else{
+                interpreting = entry.resource;
+            }
+        });
+        let detail = col.append('div').style('display','inline-block').style('float','right');
+        url = 'https://api.logicahealth.org/nbs/open/Bundle?identifier=784652' //+ bundle_identifier;
+        bundle = await fetchResource(url);
+        b = bundle.entry[0].resource;
+        detail.append('span').text('Results received: ' + b.timestamp.split('T')[0]);
+        detail.append('br');
+        detail.append('span').text('Ordered by: ' + ordering.name[0].given[0] + ' ' + ordering.name[0].family);
+        detail.append('br');
+        detail.append('span').text('Interpreted by: ' + interpreting.name[0].given[0] + ' ' + interpreting.name[0].family);
+        div.append('div').html('<hr />')
+        //Panels
+        url = 'https://api.logicahealth.org/nbs/open/DiagnosticReport?identifier=nbs-report';
+        bundle = await fetchResource(url);
+        bundle.entry.forEach(async (entry, i) => {
+            let report = entry.resource;
+            let link = report.code.coding[0].system + '/' + report.code.coding[0].code.trim()
+            let row = div.append('div').attr('class','row mb-5').style('border-left-style','solid').style('border-left-width','10px').style('border-left-color','rgba(2, 117, 216, 0.22)').style('border-radius','15px');
+            let col = row.append('div').attr('class','col-md-12');
+            col.append('h4').attr('class','mb-0 pb-0').html(report.code.coding[0].display + ' <a href=' + link + '><span style="vertical-align: middle;" data-feather="info"></span></a>').style('display','inline-block').style('padding-bottom','5px');
+            feather.replace()
+            let results_col = row.append('div').attr('class','col-md-7');
+            let results_row = results_col.append('div').attr('class','row');
+            let title = results_row.append('div').attr('class','col-md-12 pb-3');
+            let effective = new Date(report.effectiveDateTime);
+            title.append('span').html('<i>' + effective.toString() + '</i>')
+            if(report.hasOwnProperty('conclusion')){
+                title.append('br')
+                title.append('span').html('Status: ' + report.conclusion.split('|')[0] + ' <a href=' + report.conclusion.split('|')[1] + '><span style="vertical-align: middle;" data-feather="info"></span></a>').style('display','inline-block');
+                feather.replace();
+            }
+            await buildResultDisplay(results_row,report.result);
+            let comment_col = row.append('div').attr('class','col-md-5 border-left');
+            report.extension.forEach((ext, i) => {
+                if(i !== 0){
+                    comment_col.append('div').html('<hr />')
+                }
+                let l = ext.valueString.split('|');
+                comment_col.append('span').html('<b>COMMENT:</b> ' + l[0]);
+                comment_col.append('br');
+                comment_col.append('span').html('<i>Source: ' + l[1] + ' <a href=' + l[2] + '><span style="vertical-align: middle;" data-feather="info"></span></a></i>').style('display','inline-block');
+                comment_col.append('br');
+                comment_col.append('span').html('<i>Type: ' + l[3] + ' <a href=' + l[4] + '><span style="vertical-align: middle;" data-feather="info"></span></a></i>').style('display','inline-block');
+                feather.replace();
+            });
+
+        });
+    }
+}
+
+const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function buildResultDisplay(results_col,results){
+    //Loop through results
+    results.forEach(async (r, i) => {
+        url = 'https://api.logicahealth.org/nbs/open/' + r.reference;
+        obs = await fetchResource(url);
+        let link = obs.code.coding[0].system + '/' + obs.code.coding[0].code.trim();
+        result = results_col.append('div').attr('class','col-md-6 pl-4');
+        result.append('h5').html(obs.code.coding[0].display + ' <a href=' + link + '><span style="vertical-align: middle;" data-feather="info"></span></a>').style('display','inline-block');
+        feather.replace();
+        if(obs.hasOwnProperty('valueCodeableConcept')){
+            //Coded value
+            result.append('br')
+            result.append('span').text('Result: ' + obs.valueCodeableConcept.coding[0].display);
+            result.append('br')
+        }
+        else{
+            //Numeric value
+            result.append('br')
+            let unit = obs.valueQuantity.unit;
+            if (obs.valueQuantity.unit === undefined){
+                unit = ''
+            }
+            result.append('span').text('Result: ' + obs.valueQuantity.value + ' ' + unit);
+
+            if(obs.hasOwnProperty('referenceRange')){
+                result.append('br')
+                result.append('span').html('<i>Target: ' + obs.referenceRange[0].low.value + '-' + obs.referenceRange[0].high.value + ' ' + unit + '</i>');
+                let id = 'obs' + obs.id + i.toString();
+                result.append('div').attr('id',id);
+                let el = await d3.select('#' + id);
+                createGraph(el, obs.code.coding[0].code.trim(), parseInt(obs.valueQuantity.value), unit);
+            }
+            else{
+                result.append('br')
+            }
+        }
+        if(obs.hasOwnProperty('interpretation')){
+            let link = obs.interpretation[0].coding.system;
+            result.append('span').html('Interpretation: ' + obs.interpretation[0].text + ' ' + '<a href=' + link + '><span style="vertical-align: middle;" data-feather="info"></span></a>');
+            result.append('br')
+        }
+        if(obs.hasOwnProperty('note')){
+            result.append('span').html('Status: ' + obs.note[0].text);
+        }
+    });
+}
+let graph_demo = {
+    //low,rl,rh,high
+    '42906-8':[true,3,20,24],
+    '38473-5':[false,0,12.501,30],
+    '53336-4':[true,0.08,1.1,35],
+    '29575-8':[false,0,40,80],
+    '48633-2':[false,0,51,100],
+    '92007-4':[false,0,2.8,19],
+    '92002-5':[false,0,33.2,40]
+}
+
+function createGraph(el, code, percent, unit){
+    var Needle, arc, arcEndRad, arcStartRad, barWidth, chart, chartInset, degToRad, endPadRad, height, i, margin, needle, numSections, padRad, percToDeg, percToRad, percent, radius, ref, sectionIndx, sectionPerc, startPadRad, svg, totalPercent, width;
+    //Number of sections you want in the gauge
+    if(graph_demo[code][0] === true){
+        numSections = 3;
+    }else{
+        numSections = 2;
+    }
+    padRad = 0;
+    barWidth = 15;
+    chartInset = 5;
+    totalPercent = 0.75;
+    margin = {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+    };
+    width = el._groups[0][0].offsetWidth - margin.left - margin.right;
+    width = width / 2;
+    height = width;
+    radius = Math.min(width, height) / 2;
+    percToDeg = function (perc) {
+        return perc * 360;
+    };
+    percToRad = function (perc) {
+        return degToRad(percToDeg(perc));
+    };
+    degToRad = function (deg) {
+        return deg * Math.PI / 180;
+    };
+    svg = el.append('svg').attr('width', width + margin.left + margin.right).attr('height', (height/1.3) + margin.top + margin.bottom);
+    chart = svg.append('g').attr('transform', 'translate(' + (width + margin.left) / 2 + ', ' + (height + margin.top) / 2 + ')');
+    for (sectionIndx = i = 1, ref = numSections; 1 <= ref ? i <= ref : i >= ref; sectionIndx = 1 <= ref ? ++i : --i) {
+        //This loop will fun through the number of sections you indicate above
+        if(graph_demo[code][0] === true){
+            if (sectionIndx === 1){
+                //Set the percentage you want this section to take (divide by 2 so it is a horizontal gauge)
+                sectionPerc = (graph_demo[code][1] / graph_demo[code][3]) / 2
+            }
+            if (sectionIndx === 2){
+                //Set the percentage you want this section to take (divide by 2 so it is a horizontal gauge)
+                sectionPerc = ((graph_demo[code][2] - graph_demo[code][1]) / graph_demo[code][3]) / 2;
+            }
+            if (sectionIndx === 3){
+                //Set the percentage you want this section to take (divide by 2 so it is a horizontal gauge)
+                sectionPerc = ((graph_demo[code][3] - graph_demo[code][2]) / graph_demo[code][3]) / 2;
+            }
+            arcStartRad = percToRad(totalPercent);
+            arcEndRad = arcStartRad + percToRad(sectionPerc);
+            totalPercent += sectionPerc;
+            startPadRad = sectionIndx === 0 ? 0 : padRad / 2;
+            endPadRad = sectionIndx === numSections ? 0 : padRad / 2;
+            arc = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth).startAngle(arcStartRad + startPadRad).endAngle(arcEndRad - endPadRad);
+            let seg = chart.append('path').attr('class', 'arc chart-color' + sectionIndx).attr('d', arc);
+        }else{
+            if (sectionIndx === 1){
+                //Set the percentage you want this section to take (divide by 2 so it is a horizontal gauge)
+                sectionPerc = (graph_demo[code][2] / graph_demo[code][3]) / 2
+            }
+            if (sectionIndx === 2){
+                //Set the percentage you want this section to take (divide by 2 so it is a horizontal gauge)
+                sectionPerc = ((graph_demo[code][3] - graph_demo[code][2]) / graph_demo[code][3]) / 2;
+            }
+            arcStartRad = percToRad(totalPercent);
+            arcEndRad = arcStartRad + percToRad(sectionPerc);
+            totalPercent += sectionPerc;
+            startPadRad = sectionIndx === 0 ? 0 : padRad / 2;
+            endPadRad = sectionIndx === numSections ? 0 : padRad / 2;
+            arc = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth).startAngle(arcStartRad + startPadRad).endAngle(arcEndRad - endPadRad);
+            sectionIndx += 1
+            let seg = chart.append('path').attr('class', 'arc chart-color' + sectionIndx).attr('d', arc);
+        }
+
+        //Display the units for the value in the visualization
+        chart.append('text').attr('y',30).attr('text-anchor','middle').text(unit).style('stroke-opacity', '.2').style('fill','#737373');
+    }
+    Needle = function () {
+        function Needle(len, radius1) {
+            this.len = len;
+            this.radius = radius1;
+        }
+        Needle.prototype.drawOn = function (el, perc) {
+            el.append('circle').attr('class', 'needle-center').attr('cx', 0).attr('cy', 0).attr('r', this.radius);
+            return el.append('path').attr('class', 'needle').attr('d', this.mkCmd(perc));
+        };
+        Needle.prototype.animateOn = function (el, perc) {
+            var self;
+            self = this;
+            return el.transition().delay(200).ease(d3.easeElastic).duration(3000).selectAll('.needle').tween('progress', function () {
+                return function (percentOfPercent) {
+                    var progress;
+                    progress = percentOfPercent * perc;
+                    return d3.select(this).attr('d', self.mkCmd(progress));
+                };
+            });
+        };
+        Needle.prototype.mkCmd = function (perc) {
+            var centerX, centerY, leftX, leftY, rightX, rightY, thetaRad, topX, topY;
+            thetaRad = percToRad(perc / 2);
+            centerX = 0;
+            centerY = 0;
+            topX = centerX - this.len * Math.cos(thetaRad);
+            topY = centerY - this.len * Math.sin(thetaRad);
+            leftX = centerX - this.radius * Math.cos(thetaRad - Math.PI / 2);
+            leftY = centerY - this.radius * Math.sin(thetaRad - Math.PI / 2);
+            rightX = centerX - this.radius * Math.cos(thetaRad + Math.PI / 2);
+            rightY = centerY - this.radius * Math.sin(thetaRad + Math.PI / 2);
+            return 'M ' + leftX + ' ' + leftY + ' L ' + topX + ' ' + topY + ' L ' + rightX + ' ' + rightY;
+        };
+        return Needle;
+    }();
+    needle = new Needle(45, 6);
+    needle.drawOn(chart, 0);
+    //Use a D3 scale to translate the value to a percentage readable by the needle (as explained in README)
+    let scale = d3.scaleLinear()
+        .domain([0,graph_demo[code][3]])
+        .range([0,1]);
+    needle.animateOn(chart, scale(percent));
 }
 
 function resultPDF(){
     let div = d3.select('#result-content');
     div.html('');
-    let iframe = div.append('iframe');
-    iframe.attr('src','/sample.pdf').attr('width','100%').attr('height','1000px');
     d3.select('#nav-summary').classed('active',false);
     d3.select('#nav-pdf').classed('active',true);
     d3.select('#nav-fhir').classed('active',false);
+    if(bundle === undefined){
+        div.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
+    }
+    else{
+        let iframe = div.append('iframe');
+        iframe.attr('src','/sample.pdf').attr('width','100%').attr('height','1000px');
+    }
 }
 
 async function resultFHIR(){
+    let div = d3.select('#result-content');
+    div.html('');
+    d3.select('#nav-summary').classed('active',false);
+    d3.select('#nav-pdf').classed('active',false);
+    d3.select('#nav-fhir').classed('active',true);
+    let about = div.append('div').attr('class','main-about');
+    about.append('h5').text('About FHIR');
+    about.append('p').html('HL7\'s <a href="https://www.hl7.org/fhir/overview.html">FHIR</a> \
+    (Fast Healthcare Interoperable Resources) standard is a widely-adopted data standard which \
+    abstracts clinical scenarios into separate resources. These resources are linked together \
+    to describe the given scenario.');
+    about.append('p').html('The following are all the resources created in association with this \
+    NBS result message:');
+    div.append('br');
+    let row = div.append('div').attr('class','row fhir-box');
+    if(bundle === undefined){
+        row.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
+    }
+    else{
+        let col = row.append('div').attr('class','col-md-5 order-md-2 mb-4');
+        let ul = col.append('ul');
+        ids.forEach((response, i) => {
+            let li = ul.append('li').attr('class','fhir-li').attr('onclick','viewResource(this,\'' + response[0] + '\',\'' + response[1] + '\')');
+            if(i === 0){
+                li.classed('top',true);
+            };
+            li.append('p').attr('class','fhir-p').text(response[0]);
+        });
+        col = row.append('div').attr('class','col-md-7 order-md-2 mb-4');
+        let pre = col.append('pre').attr('class','view-box');
+        let view = pre.append('code').attr('id','view');
+        view.html('Select a resource to view')
+    }
+}
 
+async function viewResource(li,type,id){
+    let list = document.getElementsByClassName('selected');
+    for (let i = 0; i < list.length; i++) {
+        list[i].classList.remove('selected')
+    }
+    li.className += ' selected';
+    url = 'https://api.logicahealth.org/nbs/open/' + type + '/' + id;
+    r = await fetchResource(url);
+    document.getElementById('view').innerText = JSON.stringify(r, null, 2);
 }
 
 //Create a pop-out modal to display the resource JSON for the Questionnaire and QuestionnaireResponse
@@ -51,7 +369,9 @@ async function loadSampleORU(){
 
 let bundle,encounter,healthcareservice_hospital,healthcareservice_lab,
 location_hospital,location_lab,organization,patient,practitioner_interpreting,
-practitioner_ordering,servicerequest,specimen;
+practitioner_ordering,servicerequest,specimen,vs_obsinterpretation,vs_obsresultstatus,
+vs_drresultstatus,vs_drcommentsource,vs_drcommenttype;
+;
 let diagnosticreports = [];
 let observations = [];
 
@@ -94,8 +414,24 @@ async function loadTemplates(){
     specimen = await r.json();
 }
 
+let ids = []
 let d_count = 0; //counts the number of reports
 async function parseMessage(message){
+    //Load the expanded observation.interpretation valueset from server
+    url = 'https://api.logicahealth.org/nbs/open/ValueSet/observation-interpretation/$expand';
+    vs_obsinterpretation = await fetchResource(url);
+    //Load the expanded observation.resultstatus valueset from server
+    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0085/$expand';
+    vs_obsresultstatus = await fetchResource(url);
+    //Load the expanded diagnosticreport.conclusion.result valueset from server
+    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0123/$expand';
+    vs_drresultstatus = await fetchResource(url);
+    //Load the expanded diagnosticreport.conclusion.result valueset from server
+    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0105/$expand';
+    vs_drcommentsource = await fetchResource(url);
+    //Load the expanded diagnosticreport.conclusion.result valueset from server
+    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0364/$expand';
+    vs_drcommenttype = await fetchResource(url);
     await loadTemplates();
     let lines = message.split('\n');
     await lines.forEach(async (seg, i) => {
@@ -116,16 +452,22 @@ async function parseMessage(message){
     await createReportTemplates(d_count);
     await parseReports(message);
     //Wait for observations to finish compiling
-    const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
     await waitFor(1000);
     //Put all resources into a bundle to store on server
     await assembleBundle();
-    await assembleSubmit();
+    let r = await assembleSubmit();
+    ids = [];
+    r.entry.forEach((entry, i) => {
+        let type = entry.response.location.split('/')[0];
+        let id = entry.response.location.split('/')[1];
+        ids.push([type,id])
+    });
+    await resultSummary();
     alert('Resources created on server!')
 }
 
 async function createReportTemplates(d_count){
-    for(let i = 0; i <= d_count; i++){
+    for(let i = 0; i < d_count; i++){
         let r = await fetch('/resources/DiagnosticReport.json')
         diagnosticreports[i] = await r.json();
     }
@@ -164,7 +506,7 @@ async function parseMSH(seg){
     organization.alias[0] = msh[5];
     //MSH-7
     let datetime = msh[6].slice(0,4) + '-' + msh[6].slice(4,6) + '-' + msh[6].slice(6,8) +
-                'T' + msh[6].slice(8,10) + ':' + msh[6].slice(10,12) + ':' + msh[6].slice(12,14) + '-07:00';
+    'T' + msh[6].slice(8,10) + ':' + msh[6].slice(10,12) + ':' + msh[6].slice(12,14) + '-07:00';
     bundle.timestamp = datetime;
     encounter.period.end = datetime;
     //MSH-9 & MSH-12
@@ -228,22 +570,22 @@ async function parseORC(seg,d){
         case 'IP':
         case 'SC':
         case 'A':
-            servicerequest.status = 'active';
-            break;
+        servicerequest.status = 'active';
+        break;
         case 'HD':
-            servicerequest.status = 'on-hold';
-            break;
+        servicerequest.status = 'on-hold';
+        break;
         case 'CA':
         case 'DC':
         case 'RP':
-            servicerequest.status = 'revoked';
-            break;
+        servicerequest.status = 'revoked';
+        break;
         case 'CM':
-            servicerequest.status = 'completed';
-            break;
+        servicerequest.status = 'completed';
+        break;
         case 'ER':
-            servicerequest.status = 'entered-in-error';
-            break;
+        servicerequest.status = 'entered-in-error';
+        break;
     }
     //ORC-12
     practitioner_ordering.identifier[1].value = orc[12].split('^')[0];
@@ -258,28 +600,45 @@ async function parseOBR(seg,d){
     diagnosticreports[d].code.coding[0].display = obr[4].split('^')[1];
     //OBR-14
     let datetime = obr[14].slice(0,4) + '-' + obr[14].slice(4,6) + '-' + obr[14].slice(6,8) +
-                'T' + obr[14].slice(8,10) + ':' + obr[14].slice(10,12) + ':00-07:00';
+    'T' + obr[14].slice(8,10) + ':' + obr[14].slice(10,12) + ':00-07:00';
     specimen.receivedTime = datetime;
     //OBR-15
     specimen.type.code = obr[15].split('[')[1].split(']')[0];
     specimen.type.display = obr[15].split('[')[0]
     //OBR-22
     datetime = obr[22].slice(0,4) + '-' + obr[22].slice(4,6) + '-' + obr[22].slice(6,8) +
-                'T' + obr[22].slice(8,10) + ':' + obr[22].slice(10,12) + ':00-07:00';
+    'T' + obr[22].slice(8,10) + ':' + obr[22].slice(10,12) + ':00-07:00';
     specimen.processing.push({
-      "timeDateTime" : datetime
+        "timeDateTime" : datetime
     });
     diagnosticreports[d].effectiveDateTime = datetime;
     //OBR-25 & OBR-27
-    diagnosticreports[d].conclusion = 'Result Status (https://hl7-definition.caristix.com/v2/HL7v2.4/Tables/0123): ' + obr[25] + '; Priority (https://hl7-definition.caristix.com/v2/HL7v2.4/Fields/OBR.27): ' + obr[27].split('^')[5]
+    let conclusion;
+    vs_drresultstatus.expansion.contains.forEach((entry, i) => {
+        if (entry.code === obr[25]){
+            conclusion = entry.display + '|' + entry.system
+        }
+    });
+    diagnosticreports[d].conclusion = conclusion;
 }
 
 async function parseNTE(seg,d){
     let nte = seg.split('|');
     //NTE-2, NTE-3, NTE-4
+    let comment = nte[3];
+    vs_drcommentsource.expansion.contains.forEach((entry, i) => {
+        if (entry.code === nte[2]){
+            comment += '|' + entry.display + '|' + entry.system
+        }
+    });
+    vs_drcommenttype.expansion.contains.forEach((entry, i) => {
+        if (entry.code === nte[4]){
+            comment += '|' + entry.display + '|' + entry.system
+        }
+    });
     diagnosticreports[d].extension.push({
         "url" : "http://hl7.org/fhir/StructureDefinition/ORU_R01-comment|2.6",
-        "valueString" : 'Comment: ' + nte[3] + '; Source (https://hl7-definition.caristix.com/v2/HL7v2.4/Tables/0105): ' + nte[2] + '; Type (https://hl7-definition.caristix.com/v2/HL7v2.7/Tables/0364): ' + nte[4]
+        "valueString" : comment
     });
 }
 
@@ -297,12 +656,12 @@ async function parseOBX(seg,d){
         //OBX-5
         observation.valueCodeableConcept = {
             "coding": [
-                  {
-                      "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-                      "code": obx[5].split('^')[0],
-                      "display": obx[5].split('^')[1]
-                  }
-              ]
+                {
+                    "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                    "code": obx[5].split('^')[0],
+                    "display": obx[5].split('^')[1]
+                }
+            ]
         }
     }
     //Numeric value
@@ -314,43 +673,63 @@ async function parseOBX(seg,d){
         }
         //OBX-7
         let low,high;
+        let include = true;
         if(obx[7].includes('-')){
             low = obx[7].split('-')[0];
             high = obx[7].split('-')[1];
+
         }
-        else{
+        else if (obx[7].includes('<')){
             low = 0;
             high = obx[7].split('<')[1];
         }
-        observation.referenceRange = [
-            {
-                "low": low,
-                "high": high
-            }
-        ]
+        else {
+            include = false;
+        }
+        if (include === true){
+            observation.referenceRange.push({
+                "low": {
+                    "value" : parseFloat(low),
+                    "unit" : obx[6]
+                },
+                "high": {
+                    "value" : parseFloat(high),
+                    "unit" : obx[6]
+                }
+            })
+        }
     }
     //OBX-8
     if(obx[8] !== ''){
-        observation.interpretation = [
-          {
-              "coding": [
-                    {
-                        "system": "http://hl7.org/fhir/ValueSet/observation-interpretation",
-                        "code": obx[8]
-                    }
-                ]
-          }
-        ]
+        let display;
+        vs_obsinterpretation.expansion.contains.forEach((entry, i) => {
+            if (entry.code === obx[8]){
+                display = entry.display
+            }
+        });
+        observation.interpretation.push({
+            "coding": [
+                {
+                    "system": "http://hl7.org/fhir/ValueSet/observation-interpretation",
+                    "code": obx[8]
+                }
+            ],
+            "text": display
+        })
     }
     //OBX-11
-    observation.note.text = 'Observation Result Status (https://hl7-definition.caristix.com/v2/HL7v2.4/Tables/0085): ' + obx[11]
-    //OBX-14
-    let datetime = obx[14].slice(0,4) + '-' + obx[14].slice(4,6) + '-' + obx[14].slice(6,8) +'T00:00:00-07:00';
-    observation.effectiveDateTime = datetime;
-    diagnosticreports[d].result.push({
-      "reference": "Observation/" + observation.id
+    vs_obsresultstatus.expansion.contains.forEach((entry, i) => {
+        if (entry.code === obx[11]){
+            observation.note.text = entry.display
+        }
     });
-    observations.push(observation);
+        //OBX-14
+        let datetime = obx[14].slice(0,4) + '-' + obx[14].slice(4,6) + '-' + obx[14].slice(6,8) +'T00:00:00-07:00';
+        observation.effectiveDateTime = datetime;
+        diagnosticreports[d].result.push({
+            "reference": "Observation/" + observation.id
+        });
+        observations.push(observation);
 }
 
 async function assembleBundle(){
@@ -425,7 +804,8 @@ async function assembleSubmit(){
             }
         })
     });
-    submitBundle(submission);
+    let r = await submitBundle(submission);
+    return r
 }
 
 async function submitBundle(submission){
@@ -438,7 +818,9 @@ async function submitBundle(submission){
     };
     response = await fetch('https://api.logicahealth.org/nbs/open/', params);
     r = await response.json();
-    console.log(r);
+    diagnosticreports = [];
+    observations = [];
+    return r
 }
 
 //FOR DEMO PURPOSES ONLY
@@ -453,7 +835,6 @@ async function deleteRecords(){
             method : 'DELETE'
         });
         let r = await response.json();
-        console.log(r);
         const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
         await waitFor(500);
         //Bundle
@@ -476,7 +857,6 @@ async function deleteRecords(){
         url = 'https://api.logicahealth.org/nbs/open/Location?identifier=results-demo';
         bundle = await fetchResource(url);
         await deleteResource(bundle)
-
         alert('Resources deleted from server.')
     }
     else{
@@ -499,7 +879,6 @@ async function deleteResource(bundle){
             method : 'DELETE'
         });
         let r = await response.json();
-        console.log(r);
     });
 }
 
@@ -569,21 +948,21 @@ function loadCommunity(content){
 
 async function accountDetail(rel,rel_display,method){
     drawTimeline();
-  let options = d3.selectAll('option');
-  options._groups[0].forEach(option => {
-    if(option.value === rel){
-      option.setAttribute('selected','selected')
+    let options = d3.selectAll('option');
+    options._groups[0].forEach(option => {
+        if(option.value === rel){
+            option.setAttribute('selected','selected')
+        }
+    });
+    if(rel === 'O'){
+        d3.select('#primary-rel-other').attr('placeholder',rel_display)
     }
-  });
-  if(rel === 'O'){
-    d3.select('#primary-rel-other').attr('placeholder',rel_display)
-  }
-  if(method === 'sms'){
-    d3.select('#sms').attr('checked','checked');
-  }
-  if(method === 'phone'){
-    d3.select('#phone').attr('checked','checked');
-  }
+    if(method === 'sms'){
+        d3.select('#sms').attr('checked','checked');
+    }
+    if(method === 'phone'){
+        d3.select('#phone').attr('checked','checked');
+    }
 }
 
 // Get the modal
@@ -597,28 +976,28 @@ var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on the button, open the modal
 btn.onclick = function() {
-  modal.style.display = "block";
+    modal.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
-  modal.style.display = "none";
+    modal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 }
 
 async function login(){
-  let username = d3.select('#username').property('value');
-  let password = d3.select('#password').property('value');
-  //Sending login through url for test login purposes
-  if(username !== '' && password !== ''){
-    window.location.href = '/?login=' + username + '|' + password;
-  }
+    let username = d3.select('#username').property('value');
+    let password = d3.select('#password').property('value');
+    //Sending login through url for test login purposes
+    if(username !== '' && password !== ''){
+        window.location.href = '/?login=' + username + '|' + password;
+    }
 }
 
 function activateStep2(){
@@ -626,168 +1005,168 @@ function activateStep2(){
     let code2 = d3.select('#activation-code-2').property('value');
     let code3 = d3.select('#activation-code-3').property('value');
     if (code1.length !== 3 || code2.length !== 3 || code3.length !== 3){
-      alert('Code should have 3 digits in each box')
+        alert('Code should have 3 digits in each box')
     }
     else{
-      let code = code1 + '-' + code2 + '-' + code3;
-      let zip = d3.select('#zip').property('value');
-      let birthDate = d3.select('#birthDate').property('value');
-      if(code === '--' || zip === '' || birthDate === ''){
-        alert('Please fill all fields')
-      }
-      else{
-        let route = '/activate-step2?code=' + code + '&zip=' + zip + '&birthDate=' + birthDate
-        window.location.href = route;
-      }
+        let code = code1 + '-' + code2 + '-' + code3;
+        let zip = d3.select('#zip').property('value');
+        let birthDate = d3.select('#birthDate').property('value');
+        if(code === '--' || zip === '' || birthDate === ''){
+            alert('Please fill all fields')
+        }
+        else{
+            let route = '/activate-step2?code=' + code + '&zip=' + zip + '&birthDate=' + birthDate
+            window.location.href = route;
+        }
     }
 };
 
 function activateStep4(){
-  //Extract primary contact info
-  let pfn = d3.select('#primary-fname').property('value');
-  let pln = d3.select('#primary-lname').property('value');
-  let pr = d3.select('#primary-rel').node().value;
-  if(pr === 'O'){
-    pr = d3.select('#primary-rel-other').property('value');
-  }
-  let pe = d3.select('#primary-email').property('value');
-  let pp = d3.select('#primary-phone').property('value');
-  let m = d3.select('input[name="mode"]:checked').node().value
-  if (pfn !== '' && pln !== '' && pr !== '' && pe !== '' && pp !== '' && m !== ''){
-    //Extract secondary contact info
-    let sfn = d3.select('#secondary-fname').property('value');
-    let sln = d3.select('#secondary-lname').property('value');
-    let sr = d3.select('#secondary-rel').node().value;
-    if(sr === 'O'){
-      sr = d3.select('#secondary-rel-other').property('value');
+    //Extract primary contact info
+    let pfn = d3.select('#primary-fname').property('value');
+    let pln = d3.select('#primary-lname').property('value');
+    let pr = d3.select('#primary-rel').node().value;
+    if(pr === 'O'){
+        pr = d3.select('#primary-rel-other').property('value');
     }
-    let se = d3.select('#secondary-email').property('value');
-    let sp = d3.select('#secondary-phone').property('value');
-    if (sfn === '' && sln === '' && sr === '' && se === '' && sp === ''){
-      //Create primary, no secondary
-      let route = '/activate-step4?pfn=' + pfn + '&pln=' + pln + '&pr=' + pr +
-      '&pe=' + pe + '&pp=' + pp + '&m=' + m;
-      window.location.href = route;
+    let pe = d3.select('#primary-email').property('value');
+    let pp = d3.select('#primary-phone').property('value');
+    let m = d3.select('input[name="mode"]:checked').node().value
+    if (pfn !== '' && pln !== '' && pr !== '' && pe !== '' && pp !== '' && m !== ''){
+        //Extract secondary contact info
+        let sfn = d3.select('#secondary-fname').property('value');
+        let sln = d3.select('#secondary-lname').property('value');
+        let sr = d3.select('#secondary-rel').node().value;
+        if(sr === 'O'){
+            sr = d3.select('#secondary-rel-other').property('value');
+        }
+        let se = d3.select('#secondary-email').property('value');
+        let sp = d3.select('#secondary-phone').property('value');
+        if (sfn === '' && sln === '' && sr === '' && se === '' && sp === ''){
+            //Create primary, no secondary
+            let route = '/activate-step4?pfn=' + pfn + '&pln=' + pln + '&pr=' + pr +
+            '&pe=' + pe + '&pp=' + pp + '&m=' + m;
+            window.location.href = route;
+        }
+        else{
+            if (sfn === '' || sln === '' || sr === '' || se === '' || sp === ''){
+                console.log(sfn,sln,sr,se,sp);
+                alert('If you wish to add a secondary contact you must fill all fields')
+            }
+            else{
+                //Create primary and secondary
+                let route = '/activate-step4?pfn=' + pfn + '&pln=' + pln + '&pr=' + pr +
+                '&pe=' + pe + '&pp=' + pp + '&m=' + m + '&sfn=' + sfn + '&sln=' + sln +
+                '&sr=' + sr + '&se=' + se + '&sp=' + sp;
+                window.location.href = route;
+            }
+        }
     }
     else{
-      if (sfn === '' || sln === '' || sr === '' || se === '' || sp === ''){
-        console.log(sfn,sln,sr,se,sp);
-        alert('If you wish to add a secondary contact you must fill all fields')
-      }
-      else{
-        //Create primary and secondary
-        let route = '/activate-step4?pfn=' + pfn + '&pln=' + pln + '&pr=' + pr +
-        '&pe=' + pe + '&pp=' + pp + '&m=' + m + '&sfn=' + sfn + '&sln=' + sln +
-        '&sr=' + sr + '&se=' + se + '&sp=' + sp;
-        window.location.href = route;
-      }
+        alert('Please fill all fields for primary contact')
     }
-  }
-  else{
-    alert('Please fill all fields for primary contact')
-  }
 }
 
 function drawTimeline(){
-  let svg = d3.select("#timeline")
+    let svg = d3.select("#timeline")
     .append("svg:svg")
     .attr("width", 1500)
     .attr("height", 550)
     .style("position", "absolute")
     .style("z-index", 1100);
-  let line_highlight = svg.append("svg:line")
+    let line_highlight = svg.append("svg:line")
     .attr("x1", 150)
     .attr("y1", 200)
     .attr("x2", 750)
     .attr("y2", 200)
     .style("stroke", "white")
     .style("stroke-width", 10);
-  let circle1_highlight = svg.append("svg:circle")
+    let circle1_highlight = svg.append("svg:circle")
     .attr("cx", 150)
     .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
-  let circle1 = svg.append("svg:circle")
+    let circle1 = svg.append("svg:circle")
     .attr("cx", 150)
     .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
-  let circle2_highlight = svg.append("svg:circle")
+    let circle2_highlight = svg.append("svg:circle")
     .attr("cx", 350)
     .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
-  let circle2 = svg.append("svg:circle")
+    let circle2 = svg.append("svg:circle")
     .attr("cx", 350)
     .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
-  let circle3_highlight = svg.append("svg:circle")
+    let circle3_highlight = svg.append("svg:circle")
     .attr("cx", 550)
     .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
-  let circle3 = svg.append("svg:circle")
+    let circle3 = svg.append("svg:circle")
     .attr("cx", 550)
     .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
-  let circle4_highlight = svg.append("svg:circle")
+    let circle4_highlight = svg.append("svg:circle")
     .attr("cx", 750)
     .attr("cy", 200)
     .attr("r", 13)
     .attr("fill", "white");
-  let circle4 = svg.append("svg:circle")
+    let circle4 = svg.append("svg:circle")
     .attr("cx", 750)
     .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
-  let circle5 = svg.append("svg:circle")
+    let circle5 = svg.append("svg:circle")
     .attr("cx", 950)
     .attr("cy", 200)
     .attr("r", 10)
     .attr("fill", "#50A7C2");
-  let line = svg.append("svg:line")
+    let line = svg.append("svg:line")
     .attr("x1", 150)
     .attr("y1", 200)
     .attr("x2", 950)
     .attr("y2", 200)
     .style("stroke", "#50A7C2")
     .style("stroke-width", 5);
-  let current = svg.append("svg:circle")
+    let current = svg.append("svg:circle")
     .attr("cx", 750)
     .attr("cy", 200)
     .attr("r", 5)
     .attr("fill", "white");
-  let label1 = svg.append("svg:text")
+    let label1 = svg.append("svg:text")
     .attr("x", "75")
     .attr("y", "250")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Specimen Collected");
-  let label2 = svg.append("svg:text")
+    let label2 = svg.append("svg:text")
     .attr("x", "275")
     .attr("y", "160")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Specimen Processed");
-  let label3 = svg.append("svg:text")
+    let label3 = svg.append("svg:text")
     .attr("x", "475")
     .attr("y", "250")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Results Reviewed");
-  let label4 = svg.append("svg:text")
+    let label4 = svg.append("svg:text")
     .attr("x", "675")
     .attr("y", "160")
     .attr("font-family", "sans-serif")
     .attr("font-size", "20px")
     .attr("fill", "white")
     .text("Call from Doctor");
-  let label5 = svg.append("svg:text")
+    let label5 = svg.append("svg:text")
     .attr("x", "875")
     .attr("y", "250")
     .attr("font-family", "sans-serif")
