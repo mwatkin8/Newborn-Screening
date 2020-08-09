@@ -1,7 +1,9 @@
 async function resultInit(){
+    loadingModal();
     drawTimeline();
     deleteRecords();
-    resultSummary();
+    await resultSummary();
+    closeLoadingModal();
 }
 
 async function resultSummary(){
@@ -10,7 +12,7 @@ async function resultSummary(){
     d3.select('#nav-summary').classed('active',true);
     d3.select('#nav-pdf').classed('active',false);
     d3.select('#nav-fhir').classed('active',false);
-    if(bundle === undefined){
+    if(nbs_bundle === undefined){
         div.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
     }
     else{
@@ -90,6 +92,7 @@ async function resultSummary(){
 
         });
     }
+    closeLoadingModal();
 }
 
 const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
@@ -139,6 +142,7 @@ async function buildResultDisplay(results_col,results){
             result.append('span').html('Status: ' + obs.note[0].text);
         }
     });
+
 }
 let graph_demo = {
     //low,rl,rh,high
@@ -278,7 +282,7 @@ function resultPDF(){
     d3.select('#nav-summary').classed('active',false);
     d3.select('#nav-pdf').classed('active',true);
     d3.select('#nav-fhir').classed('active',false);
-    if(bundle === undefined){
+    if(nbs_bundle === undefined){
         div.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
     }
     else{
@@ -303,7 +307,7 @@ async function resultFHIR(){
     NBS result message:');
     div.append('br');
     let row = div.append('div').attr('class','row fhir-box');
-    if(bundle === undefined){
+    if(nbs_bundle === undefined){
         row.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
     }
     else{
@@ -334,7 +338,6 @@ async function viewResource(li,type,id){
     document.getElementById('view').innerText = JSON.stringify(r, null, 2);
 }
 
-//Create a pop-out modal to display the resource JSON for the Questionnaire and QuestionnaireResponse
 async function messageModal(type){
     if (type === 'enter'){
         d3.select('#modal-text').node().value = '';
@@ -350,6 +353,15 @@ async function messageModal(type){
     }
 }
 
+async function loadingModal(){
+    let modal = d3.select('#loading-modal');
+    modal.style('display','block');
+}
+async function closeLoadingModal(){
+    let modal = d3.select('#loading-modal');
+    modal.style('display','none');
+}
+
 async function closeModal(type){
     let id = '#' + type + '-modal'
     let modal = d3.select(id);
@@ -359,15 +371,19 @@ async function closeModal(type){
 async function loadUserORU(){
     let message = d3.select('#modal-text').node().value;
     closeModal('enter')
+    loadingModal();
     await parseMessage(message);
+    closeLoadingModal();
 }
 async function loadSampleORU(){
     let r = await fetch('sample.txt');
     let message = await r.text();
-    parseMessage(message);
+    loadingModal();
+    await parseMessage(message);
+    closeLoadingModal();
 }
 
-let bundle,encounter,healthcareservice_hospital,healthcareservice_lab,
+let nbs_bundle,encounter,healthcareservice_hospital,healthcareservice_lab,
 location_hospital,location_lab,organization,patient,practitioner_interpreting,
 practitioner_ordering,servicerequest,specimen,vs_obsinterpretation,vs_obsresultstatus,
 vs_drresultstatus,vs_drcommentsource,vs_drcommenttype;
@@ -378,7 +394,7 @@ let observations = [];
 async function loadTemplates(){
     //bundle
     let r = await fetch('/resources/Bundle.json')
-    bundle = await r.json();
+    nbs_bundle = await r.json();
     //encounter
     r = await fetch('/resources/Encounter.json')
     encounter = await r.json();
@@ -417,53 +433,56 @@ async function loadTemplates(){
 let ids = []
 let d_count = 0; //counts the number of reports
 async function parseMessage(message){
-    //Load the expanded observation.interpretation valueset from server
-    url = 'https://api.logicahealth.org/nbs/open/ValueSet/observation-interpretation/$expand';
-    vs_obsinterpretation = await fetchResource(url);
-    //Load the expanded observation.resultstatus valueset from server
-    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0085/$expand';
-    vs_obsresultstatus = await fetchResource(url);
-    //Load the expanded diagnosticreport.conclusion.result valueset from server
-    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0123/$expand';
-    vs_drresultstatus = await fetchResource(url);
-    //Load the expanded diagnosticreport.conclusion.result valueset from server
-    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0105/$expand';
-    vs_drcommentsource = await fetchResource(url);
-    //Load the expanded diagnosticreport.conclusion.result valueset from server
-    url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0364/$expand';
-    vs_drcommenttype = await fetchResource(url);
-    await loadTemplates();
-    let lines = message.split('\n');
-    await lines.forEach(async (seg, i) => {
-        let type = seg.split('|')[0];
-        if (type === 'MSH'){
-            await parseMSH(seg);
-        }
-        if (type === 'PID'){
-            await parsePID(seg);
-        }
-        if (type === 'PV1'){
-            await parsePV1(seg);
-        }
-        if (type === 'ORC'){
-            d_count += 1;
-        }
-    });
-    await createReportTemplates(d_count);
-    await parseReports(message);
-    //Wait for observations to finish compiling
-    await waitFor(1000);
-    //Put all resources into a bundle to store on server
-    await assembleBundle();
-    let r = await assembleSubmit();
-    ids = [];
-    r.entry.forEach((entry, i) => {
-        let type = entry.response.location.split('/')[0];
-        let id = entry.response.location.split('/')[1];
-        ids.push([type,id])
-    });
-    await resultSummary();
-    alert('Resources created on server!')
+    let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
+    let bundle = await fetchResource(url);
+    if (bundle.total === 0){
+        //Load the expanded observation.interpretation valueset from server
+        url = 'https://api.logicahealth.org/nbs/open/ValueSet/observation-interpretation/$expand';
+        vs_obsinterpretation = await fetchResource(url);
+        //Load the expanded observation.resultstatus valueset from server
+        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0085/$expand';
+        vs_obsresultstatus = await fetchResource(url);
+        //Load the expanded diagnosticreport.conclusion.result valueset from server
+        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0123/$expand';
+        vs_drresultstatus = await fetchResource(url);
+        //Load the expanded diagnosticreport.conclusion.result valueset from server
+        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0105/$expand';
+        vs_drcommentsource = await fetchResource(url);
+        //Load the expanded diagnosticreport.conclusion.result valueset from server
+        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0364/$expand';
+        vs_drcommenttype = await fetchResource(url);
+        await loadTemplates();
+        let lines = message.split('\n');
+        await lines.forEach(async (seg, i) => {
+            let type = seg.split('|')[0];
+            if (type === 'MSH'){
+                await parseMSH(seg);
+            }
+            if (type === 'PID'){
+                await parsePID(seg);
+            }
+            if (type === 'PV1'){
+                await parsePV1(seg);
+            }
+            if (type === 'ORC'){
+                d_count += 1;
+            }
+        });
+        await createReportTemplates(d_count);
+        await parseReports(message);
+        //Wait for observations to finish compiling
+        await waitFor(1000);
+        //Put all resources into a bundle to store on server
+        await assembleBundle();
+        let r = await assembleSubmit();
+        ids = [];
+        r.entry.forEach((entry, i) => {
+            let type = entry.response.location.split('/')[0];
+            let id = entry.response.location.split('/')[1];
+            ids.push([type,id])
+        });
+        await resultSummary();
+    }
 }
 
 async function createReportTemplates(d_count){
@@ -507,17 +526,17 @@ async function parseMSH(seg){
     //MSH-7
     let datetime = msh[6].slice(0,4) + '-' + msh[6].slice(4,6) + '-' + msh[6].slice(6,8) +
     'T' + msh[6].slice(8,10) + ':' + msh[6].slice(10,12) + ':' + msh[6].slice(12,14) + '-07:00';
-    bundle.timestamp = datetime;
+    nbs_bundle.timestamp = datetime;
     encounter.period.end = datetime;
     //MSH-9 & MSH-12
-    bundle.identifier.type.coding[0].code = msh[8].split('^')[2];
-    bundle.identifier.type.coding[0].display = msh[8].split('^')[2] + '|' + msh[11];
+    nbs_bundle.identifier.type.coding[0].code = msh[8].split('^')[2];
+    nbs_bundle.identifier.type.coding[0].display = msh[8].split('^')[2] + '|' + msh[11];
     //MSH-10
     //bundle_identifier = msh[9];
-    bundle.identifier.value = msh[9];
+    nbs_bundle.identifier.value = msh[9];
     //MSH-21
-    bundle.identifier.type.coding[1].code = msh[20].split('~')[1];
-    bundle.identifier.type.coding[1].display = msh[20];
+    nbs_bundle.identifier.type.coding[1].code = msh[20].split('~')[1];
+    nbs_bundle.identifier.type.coding[1].display = msh[20];
 }
 
 async function parsePID(seg){
@@ -733,7 +752,7 @@ async function parseOBX(seg,d){
 }
 
 async function assembleBundle(){
-    bundle.entry.push(
+    nbs_bundle.entry.push(
         {
             "resource": organization
         },
@@ -769,12 +788,12 @@ async function assembleBundle(){
         }
     );
     diagnosticreports.forEach((report, i) => {
-        bundle.entry.push({
+        nbs_bundle.entry.push({
             "resource" : report
         });
     });
     observations.forEach((obs, i) => {
-        bundle.entry.push({
+        nbs_bundle.entry.push({
             "resource" : obs
         });
     });
@@ -784,10 +803,10 @@ async function assembleSubmit(){
     let submission= {
         "resourceType": "Bundle",
         "type": "transaction",
-        "total": bundle.entry.length,
+        "total": nbs_bundle.entry.length,
         "entry": [
             {
-                "resource": bundle,
+                "resource": nbs_bundle,
                 "request": {
                     "method": "POST",
                     "url": "Bundle"
@@ -795,7 +814,7 @@ async function assembleSubmit(){
             }
         ]
     };
-    bundle.entry.forEach((entry, i) => {
+    nbs_bundle.entry.forEach((entry, i) => {
         submission.entry.push({
             "resource": entry.resource,
             "request": {
@@ -828,6 +847,7 @@ async function deleteRecords(){
     let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
     let bundle = await fetchResource(url);
     if (bundle.total !== 0){
+        loadingModal();
         let patient = bundle.entry[0].resource.id;
         //Patient
         let url = 'https://api.logicahealth.org/nbs/open/Patient?_id=' + patient + '&_cascade=delete'
@@ -856,11 +876,10 @@ async function deleteRecords(){
         //Location
         url = 'https://api.logicahealth.org/nbs/open/Location?identifier=results-demo';
         bundle = await fetchResource(url);
-        await deleteResource(bundle)
-        alert('Resources deleted from server.')
-    }
-    else{
-        alert('Sample data has not been loaded yet.');
+        await deleteResource(bundle);
+        nbs_bundle = undefined;
+        await resultSummary()
+        closeLoadingModal();
     }
 }
 
