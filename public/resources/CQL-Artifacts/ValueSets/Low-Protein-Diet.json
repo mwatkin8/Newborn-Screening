@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "low-protein-diet",
+    "url": "http://test-url.com/fhir/ValueSet/low-protein-diet",
+    "version": "1.0.0",
+    "title": "Low Protein Diet",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "160673009",
+                      "display": "Low protein diet (finding)"
+                    }
+                ]
+            }
+        ]
+    }
+}

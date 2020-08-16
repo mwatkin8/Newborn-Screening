@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "thoracic-surger-thymectomy",
+    "url": "http://test-url.com/fhir/ValueSet/thoracic-surger-thymectomy",
+    "version": "1.0.0",
+    "title": "Thoracic surgery involving thymectomy",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "399750009",
+                      "display": "Excision of thymus (procedure)"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -4,14 +4,13 @@
   "description": "App description here",
   "main": "index.js",
   "scripts": {
-    "start-server": "nodemon ./index.js localhost 8080"
+    "start-server": "nodemon ./index.js localhost 8000"
   },
   "author": "mwatkin8",
   "license": "Apache-2.0",
   "dependencies": {
     "ejs": "^3.1.3",
     "express": "^4.17.1",
-    "hl7parser": "^1.0.1",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {

@@ -1,0 +1,30 @@
+{
+    "resourceType": "ValueSet",
+    "id": "thyroid-treatments",
+    "url": "http://test-url.com/fhir/ValueSet/thyroid-treatments",
+    "version": "1.0.0",
+    "title": "Thyroid Treatments",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                "concept": [
+                    {
+                        "code": "198175",
+                        "display": "Propylthiouracil 50 MG Oral Tablet"
+                    },
+                    {
+                        "code": "207010",
+                        "display": "TAPAZOLE 5 MG Oral Tablet"
+                    },
+                    {
+                        "code": "1546415",
+                        "display": "iodide ion I-131"
+                    }
+                ]
+            }
+        ]
+    }
+}

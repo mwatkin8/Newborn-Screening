@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "immature-renal-system",
+    "url": "http://test-url.com/fhir/ValueSet/immature-renal-system",
+    "version": "1.0.0",
+    "title": "Immature renal system",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "121791000119109",
+                      "display": "Fetal genitourinary abnormality (disorder)"
+                    }
+                ]
+            }
+        ]
+    }
+}

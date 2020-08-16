@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "immature-liver-enzymes",
+    "url": "http://test-url.com/fhir/ValueSet/immature-liver-enzymes",
+    "version": "1.0.0",
+    "title": "Immature liver enzymes",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "166643006",
+                      "display": "Liver enzymes abnormal (finding)"
+                    }
+                ]
+            }
+        ]
+    }
+}

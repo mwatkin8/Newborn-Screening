@@ -1,9 +1,15 @@
 {
   "resourceType" : "Specimen",
   "id" : "nbs-specimen",
+  "identifier": [
+      {
+          "system": "resultsmyway",
+          "value": "nbs-specimen"
+      }
+  ],
   "type" : {
       "system" : "http://loinc.org",
-      "code" : "",
+      "code" : "79566-6",
       "display" : "Collection method - DBS"
   },
   "subject" : {

@@ -1,0 +1,30 @@
+{
+    "resourceType": "ValueSet",
+    "id": "hypothalamic-pituitary-axis",
+    "url": "http://test-url.com/fhir/ValueSet/hypothalamic-pituitary-axis",
+    "version": "1.0.0",
+    "title": "Immature hypothalamic/pituitary axis",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "442781001",
+                      "display": "Hypothalamic-pituitary-ovarian axis dysfunction (disorder)"
+                    },
+                    {
+                      "code": "442782008",
+                      "display": "Hypothalamic-pituitary-testicular axis dysfunction (disorder)"
+                    },
+                    {
+                      "code": "442762009",
+                      "display": "Hypothalamic-pituitary-adrenal axis dysfunction (disorder)"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,6 +1,12 @@
 {
   "resourceType": "Observation",
   "id": "",
+  "identifier": [
+      {
+          "system": "resultsmyway",
+          "value": "nbs-observation"
+      }
+  ],
   "basedOn": [
     {
       "reference": "ServiceRequest/nbs-servicerequest"

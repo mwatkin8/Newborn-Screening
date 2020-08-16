@@ -1,6 +1,12 @@
 {
   "resourceType" : "Encounter",
   "id" : "nbs-encounter",
+  "identifier": [
+      {
+          "system": "resultsmyway",
+          "value": "nbs-encounter"
+      }
+  ],
   "status" : "finished",
   "class" : {
       "system" : "http://terminology.hl7.org/CodeSystem/v2-0004",

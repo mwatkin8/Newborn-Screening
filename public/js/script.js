@@ -18,7 +18,7 @@ async function resultSummary(){
     else{
         let row = div.append('div').attr('class','row');
         let col = row.append('div').attr('class','col-md-12').style('display','block');
-        let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
+        let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Patient?identifier=results-demo';
         let bundle = await fetchResource(url);
         let r = bundle.entry[0].resource;
         //Patient name
@@ -34,7 +34,7 @@ async function resultSummary(){
         let age = Math.round(Math.abs((dob - today) / oneDay));
         //Gender
         dem.append('i').text(age + ' day-old ' + gender)
-        url = 'https://api.logicahealth.org/nbs/open/Practitioner?identifier=results-demo';
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Practitioner?identifier=results-demo';
         bundle = await fetchResource(url);
         let ordering,interpreting;
         bundle.entry.forEach((entry, i) => {
@@ -46,7 +46,7 @@ async function resultSummary(){
             }
         });
         let detail = col.append('div').style('display','inline-block').style('float','right');
-        url = 'https://api.logicahealth.org/nbs/open/Bundle?identifier=784652' //+ bundle_identifier;
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
         bundle = await fetchResource(url);
         b = bundle.entry[0].resource;
         detail.append('span').text('Results received: ' + b.timestamp.split('T')[0]);
@@ -56,7 +56,7 @@ async function resultSummary(){
         detail.append('span').text('Interpreted by: ' + interpreting.name[0].given[0] + ' ' + interpreting.name[0].family);
         div.append('div').html('<hr />')
         //Panels
-        url = 'https://api.logicahealth.org/nbs/open/DiagnosticReport?identifier=nbs-report';
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/DiagnosticReport?identifier=nbs-report';
         bundle = await fetchResource(url);
         bundle.entry.forEach(async (entry, i) => {
             let report = entry.resource;
@@ -100,7 +100,7 @@ const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 async function buildResultDisplay(results_col,results){
     //Loop through results
     results.forEach(async (r, i) => {
-        url = 'https://api.logicahealth.org/nbs/open/' + r.reference;
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/' + r.reference;
         obs = await fetchResource(url);
         let link = obs.code.coding[0].system + '/' + obs.code.coding[0].code.trim();
         result = results_col.append('div').attr('class','col-md-6 pl-4');
@@ -333,7 +333,7 @@ async function viewResource(li,type,id){
         list[i].classList.remove('selected')
     }
     li.className += ' selected';
-    url = 'https://api.logicahealth.org/nbs/open/' + type + '/' + id;
+    url = 'http://localhost:8080/cqf-ruler-r4/fhir/' + type + '/' + id;
     r = await fetchResource(url);
     document.getElementById('view').innerText = JSON.stringify(r, null, 2);
 }
@@ -355,6 +355,14 @@ async function messageModal(type){
 
 async function loadingModal(){
     let modal = d3.select('#loading-modal');
+    modal.style('display','block');
+}
+async function libraryModal(){
+    let modal = d3.select('#library-modal');
+    modal.style('display','block');
+}
+async function communityModal(){
+    let modal = d3.select('#community-modal');
     modal.style('display','block');
 }
 async function closeLoadingModal(){
@@ -433,23 +441,29 @@ async function loadTemplates(){
 let ids = []
 let d_count = 0; //counts the number of reports
 async function parseMessage(message){
-    let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
+    //let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Patient?identifier=results-demo'
     let bundle = await fetchResource(url);
     if (bundle.total === 0){
         //Load the expanded observation.interpretation valueset from server
-        url = 'https://api.logicahealth.org/nbs/open/ValueSet/observation-interpretation/$expand';
+        //url = 'https://api.logicahealth.org/nbs/open/ValueSet/observation-interpretation/$expand';
+        url='http://localhost:8080/cqf-ruler-r4/fhir/ValueSet/observation-interpretation/$expand';
         vs_obsinterpretation = await fetchResource(url);
         //Load the expanded observation.resultstatus valueset from server
-        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0085/$expand';
+        //url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0085/$expand';
+        url='http://localhost:8080/cqf-ruler-r4/fhir/ValueSet/v2-0085/$expand';
         vs_obsresultstatus = await fetchResource(url);
         //Load the expanded diagnosticreport.conclusion.result valueset from server
-        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0123/$expand';
+        //url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0123/$expand';
+        url='http://localhost:8080/cqf-ruler-r4/fhir/ValueSet/v2-0123/$expand';
         vs_drresultstatus = await fetchResource(url);
         //Load the expanded diagnosticreport.conclusion.result valueset from server
-        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0105/$expand';
+        //url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0105/$expand';
+        url='http://localhost:8080/cqf-ruler-r4/fhir/ValueSet/v2-0105/$expand';
         vs_drcommentsource = await fetchResource(url);
         //Load the expanded diagnosticreport.conclusion.result valueset from server
-        url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0364/$expand';
+        //url = 'https://api.logicahealth.org/nbs/open/ValueSet/v2-0364/$expand';
+        url='http://localhost:8080/cqf-ruler-r4/fhir/ValueSet/v2-0364/$expand';
         vs_drcommenttype = await fetchResource(url);
         await loadTemplates();
         let lines = message.split('\n');
@@ -835,7 +849,7 @@ async function submitBundle(submission){
         },
         body: JSON.stringify(submission)
     };
-    response = await fetch('https://api.logicahealth.org/nbs/open/', params);
+    response = await fetch('http://localhost:8080/cqf-ruler-r4/fhir/', params);
     r = await response.json();
     diagnosticreports = [];
     observations = [];
@@ -844,37 +858,62 @@ async function submitBundle(submission){
 
 //FOR DEMO PURPOSES ONLY
 async function deleteRecords(){
-    let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Patient?identifier=results-demo';
     let bundle = await fetchResource(url);
     if (bundle.total !== 0){
         loadingModal();
         let patient = bundle.entry[0].resource.id;
+        const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
+        //DiagnosticReport
+        let url = 'http://localhost:8080/cqf-ruler-r4/fhir/DiagnosticReport?subject=' + patient + '&identifier=nbs-report';
+        bundle = await fetchResource(url);
+        await deleteResource(bundle)
+        await waitFor(500);
+        //Observation
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Observation?subject=' + patient + '&identifier=nbs-observation';
+        bundle = await fetchResource(url);
+        await deleteResource(bundle)
+        await waitFor(500);
+        //ServiceRequest
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/ServiceRequest?subject=' + patient + '&identifier=nbs-servicerequest';
+        bundle = await fetchResource(url);
+        await deleteResource(bundle)
+        await waitFor(500);
+        //Encounter
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Encounter?subject=' + patient + '&identifier=nbs-encounter';
+        bundle = await fetchResource(url);
+        await deleteResource(bundle)
+        await waitFor(500);
+        //Specimen
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Specimen?subject=' + patient + '&identifier=nbs-specimen';
+        bundle = await fetchResource(url);
+        await deleteResource(bundle)
+        await waitFor(500);
         //Patient
-        let url = 'https://api.logicahealth.org/nbs/open/Patient?_id=' + patient + '&_cascade=delete'
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Patient?_id=' + patient
         let response = await fetch(url, {
             method : 'DELETE'
         });
         let r = await response.json();
-        const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
         await waitFor(500);
         //Bundle
-        url = 'https://api.logicahealth.org/nbs/open/Bundle?identifier=784652' //+ bundle_identifier;
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
         bundle = await fetchResource(url);
         await deleteResource(bundle)
         //HealthcareService
-        url = 'https://api.logicahealth.org/nbs/open/HealthcareService?identifier=results-demo';
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/HealthcareService?identifier=results-demo';
         bundle = await fetchResource(url);
         await deleteResource(bundle)
         //Practitioner
-        url = 'https://api.logicahealth.org/nbs/open/Practitioner?identifier=results-demo';
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Practitioner?identifier=results-demo';
         bundle = await fetchResource(url);
         await deleteResource(bundle)
         //Organization
-        url = 'https://api.logicahealth.org/nbs/open/Organization?identifier=results-demo';
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Organization?identifier=results-demo';
         bundle = await fetchResource(url);
         await deleteResource(bundle)
         //Location
-        url = 'https://api.logicahealth.org/nbs/open/Location?identifier=results-demo';
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Location?identifier=results-demo';
         bundle = await fetchResource(url);
         await deleteResource(bundle);
         nbs_bundle = undefined;
@@ -890,15 +929,19 @@ async function fetchResource(url){
 
 
 async function deleteResource(bundle){
-    bundle.entry.forEach(async (entry, i) => {
-        let type = entry.resource.resourceType;
-        let id = entry.resource.id;
-        let url = 'https://api.logicahealth.org/nbs/open/' + type + '/' + id
-        let response = await fetch(url, {
-            method : 'DELETE'
+    try{
+        bundle.entry.forEach(async (entry, i) => {
+            let type = entry.resource.resourceType;
+            let id = entry.resource.id;
+            let url = 'http://localhost:8080/cqf-ruler-r4/fhir/' + type + '/' + id
+            let response = await fetch(url, {
+                method : 'DELETE'
+            });
+            let r = await response.json();
         });
-        let r = await response.json();
-    });
+    }catch (error){
+        //console.log(error);
+    }
 }
 
 function removeLoading(){
@@ -916,7 +959,12 @@ function loadLibrary(type,content){
         let row = list.append('div').attr('class','row media text-muted pt-3 pb-3 border-bottom border-gray');
         let img = row.append('div').attr('class','col-md-2');
         img.append('img').attr('src','img/content-imgs/' + content.condition +'/library/' + source.image).attr('width','70').attr('height','70').attr('class','mr-2 rounded');
-        let info = row.append('div').attr('class','col-md-10');
+        let rate_row = img.append('div').attr('class','row pt-1 pl-1');
+        let like = rate_row.append('div').attr('class','col-md-6 pr-1');
+        like.append('span').attr('id','like'+ i.toString()).attr('class','rate').attr('data-feather','thumbs-up').attr('onclick','like(this,' + i.toString() + ')').style('float','right');
+        let dislike = rate_row.append('div').attr('class','col-md-6 pl-1');
+        dislike.append('span').attr('id','dislike'+ i.toString()).attr('class','rate').attr('data-feather','thumbs-down').attr('onclick','dislike(this,' + i.toString() + ')').style('float','left');
+        let info = row.append('div').attr('class','col-md-9');
         let title = info.append('div').attr('class','row ml-1');
         title.append('h6').attr('class','mb-0').text(source.title);
         let type = info.append('div').attr('class','row ml-1');
@@ -932,6 +980,29 @@ function loadLibrary(type,content){
     feather.replace()
     d3.select('#preview-button-0').attr('class','btn-sm btn-primary preview-button ml-3')
 }
+
+function like(e,i){
+    if(e.getAttribute('stroke') === 'currentColor'){
+        e.setAttribute('stroke', '#0275d8');
+        let dislike = d3.select('#dislike' + i);
+        dislike.node().setAttribute('stroke','currentColor')
+    }
+    else{
+        e.setAttribute('stroke','currentColor');
+    }
+}
+
+function dislike(e,i){
+    if(e.getAttribute('stroke') === 'currentColor'){
+        e.setAttribute('stroke', '#0275d8');
+        let like = d3.select('#like' + i);
+        like.node().setAttribute('stroke','currentColor')
+    }
+    else{
+        e.setAttribute('stroke', 'currentColor');
+    }
+}
+
 function togglePreview(idx,url){
     let frame = d3.select('#preview-frame').attr('src',url);
     d3.selectAll('.preview-button').attr('class','btn-sm btn-outline-primary preview-button ml-3')
@@ -945,6 +1016,11 @@ function loadCommunity(content){
         let div = sources.append('div').attr('class','text-center border-bottom border-gray pb-3 pt-3');
         div.append('img').attr('class','border rounded-circle').attr('src','img/content-imgs/' + content.condition +'/community/' + source.image).attr('width','140').attr('height','140');
         div.append('h3').text(source.title);
+        let rate_row = div.append('div').attr('class','row pt-1 pl-1');
+        let like = rate_row.append('div').attr('class','col-md-6 pr-1');
+        like.append('span').attr('id','like'+ i.toString()).attr('class','rate').attr('data-feather','thumbs-up').attr('onclick','like(this,' + i.toString() + ')').style('float','right');
+        let dislike = rate_row.append('div').attr('class','col-md-6 pl-1 pb-3');
+        dislike.append('span').attr('id','dislike'+ i.toString()).attr('class','rate').attr('data-feather','thumbs-down').attr('onclick','dislike(this,' + i.toString() + ')').style('float','left');
         let p = div.append('p');
         if(source.facebook !== ""){
             let link = p.append('a').attr('href', source.facebook);

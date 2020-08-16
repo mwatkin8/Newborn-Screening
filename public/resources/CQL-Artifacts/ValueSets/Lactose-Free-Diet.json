@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "lactose-free-diet",
+    "url": "http://test-url.com/fhir/ValueSet/lactose-free-diet",
+    "version": "1.0.0",
+    "title": "Lactose-free Diet",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "425458000",
+                      "display": "Lactose-free diet (regime/therapy)"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -2,7 +2,6 @@ let express = require('express');
 let path = require('path');
 let fetch = require('node-fetch')
 let fs = require('fs');
-let hl7parser = require("hl7parser");
 let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
@@ -11,7 +10,7 @@ app.set('view engine', 'html');
 //Allow access to front-end static files
 app.use(express.static(path.join(__dirname, '/public/')));
 
-let server = 'https://api.logicahealth.org/nbs/open';
+let server = 'http://host.docker.internal:8080/cqf-ruler-r4/fhir';
 let nb_id,username,password,fname,lname,rel,rel_display,method,email,phone;
 
 app.get('/', async (request, response) => {
@@ -159,6 +158,7 @@ app.get('/account', async (request, response) => {
 
 async function getResource(url){
     let response = await fetch(url);
+    console.log(response);
     return await response.json();
 }
 
@@ -236,6 +236,7 @@ async function verifyActivationParams(code,zip,birthDate){
   let url = server + '/Patient?identifier=ResultsMyWay|' + code +
   '&address-postalcode=' + zip + '&birthdate=' + birthDate;
   let bundle = await getResource(url);
+  //console.log(bundle);
   let r = bundle.entry[0].resource;
   let id = r.id;
   let name = r.name[0].given[0] + ' ' + r.name[0].family + ' ';
@@ -247,119 +248,5 @@ async function verifyActivationParams(code,zip,birthDate){
   return [id,name,bd,organization]
 }
 
-async function createReport(){
-  let pdf = await pdfjsLib.getDocument('../sample.pdf');
-  let page1 = await pdf.getPage(1);
-  let page2 = await pdf.getPage(2);
-  let content1 = await page1.getTextContent();
-  let content2 = await page2.getTextContent();
-  let response = await fetch('../sample.pdf');
-  let b = await response.blob();
-  let reader = new FileReader();
-  reader.onloadend = function() {
-      let url = reader.result;
-      let base64 = url.split(',')[1];
-      parsePDF(content1, content2, base64);
-  };
-  let binary = localStorage['pdf-binary'];
-    t.presentedForm = {
-        'contentType': 'application/pdf',
-        'language': 'en',
-        'data': binary,
-    };
-}
-
-async function displayReport(){
-
-    document.getElementById('main-content').innerHTML = '<img style="padding-left:350px;" src="../img/loader.gif"/>';
-    let url = window.server + '/DiagnosticReport?_id=' + window.reportID;
-    let bundle = await getResource(url);
-    let r =  bundle.entry[0].resource;
-    let base64 = r.presentedForm[0].data;
-    let byteCharacters = atob(base64);
-    let byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    let byteArray = new Uint8Array(byteNumbers);
-    let blob = new Blob([byteArray], {type: "application/pdf"});
-    let file = window.URL.createObjectURL(blob);
-    document.getElementById('main-content').innerHTML = '<iframe id="frame" width="100%" height="800px" src="' + file + '"></iframe>'
-}
-
-
-
-
-/*
-//-------SMART launch params---------
-let client = "PUT-CLIENT-ID-HERE"; //Given by sandbox when registering
-let server,launch,redirect,authUri,tokenUri;
-
-app.get('/smart-launch', async (request, response) => {
-    //URL for the secure data endpoint
-    server = request.query.iss;
-    //Launch context parameter
-    launch = request.query.launch;
-    //Permission to launch and read/write all resources for the launch patient
-    let scope = ["patient/*.read","launch"].join(" ");
-    //Random session key
-    let state = Math.round(Math.random()*100000000).toString();
-    //Set redirect to the app landing page - CHANGE TO DYNAMICALLY DETECT PROTOCOL IF NOT USING LOCALHOST
-    redirect = 'http://' + request.headers.host + '/'
-    // Get the conformance statement and extract URL for auth server and token
-    let req = await fetch(server + "/metadata");
-    let r = await req.json();
-    let smartExtension = r.rest[0].security.extension.filter(function (e) {
-        return (e.url === "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris");
-    });
-    smartExtension[0].extension.forEach(function(arg, index, array){
-        if (arg.url === "authorize") {
-            authUri = arg.valueUri;
-        } else if (arg.url === "token") {
-            tokenUri = arg.valueUri;
-        }
-    });
-    //Redirect to the authorization server and request launch
-    response.redirect( authUri + "?" +
-        "response_type=code&" +
-        "client_id=" + encodeURIComponent(client) + "&" +
-        "scope=" + encodeURIComponent(scope) + "&" +
-        "redirect_uri=" + encodeURIComponent(redirect) + "&" +
-        "aud=" + encodeURIComponent(server) + "&" +
-        "launch=" + launch + "&" +
-        "state=" + state )
-});
-
-
-async function getResource(url){
-    let response = await fetch(url, {
-        method: 'get',
-        headers: {'Authorization': 'Bearer ' + token}
-    });
-    return await response.json();
-}
-
-//Fetch the patient access token
-let code = request.query.code;
-let r = await fetch(tokenUri, {
-    method:'POST',
-    body: 'grant_type=authorization_code&client_id=' + client + '&redirect_uri=' + redirect + '&code=' + code,
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-});
-let res = await r.json();
-token = res.access_token;
-patient = res.patient;
-let dem = await demographics()
-response.render('index',{name:dem[0],gender:dem[1],age:dem[2],test_var:'this is a test'});
-
-let token,patient;
-app.get('/', async (request, response) => {
-    response.render('signin');
-
-});
-*/
-
 // Here is where we define the port for the localhost server to setup
-app.listen(8080);
+app.listen(8000);

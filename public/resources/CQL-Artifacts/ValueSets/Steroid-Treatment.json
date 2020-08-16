@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "steroid-treatment",
+    "url": "http://test-url.com/fhir/ValueSet/steroid-treatment",
+    "version": "1.0.0",
+    "title": "Steroid Treatment",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                "concept": [
+                    {
+                      "code": "8640",
+                      "display": "Prednisone"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "resourceType": "ValueSet",
+    "id": "bowel-obstruction",
+    "url": "http://test-url.com/fhir/ValueSet/bowel-obstruction",
+    "version": "1.0.0",
+    "title": "Meconium ileus or other bowel obstruction",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "206523001",
+                      "display": "Meconium ileus (disorder)"
+                    },
+                    {
+                      "code": "81060008",
+                      "display": "Intestinal obstruction (disorder)"
+                    }
+                ]
+            }
+        ]
+    }
+}

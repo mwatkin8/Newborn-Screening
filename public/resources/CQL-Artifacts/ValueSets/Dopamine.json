@@ -1,0 +1,54 @@
+{
+    "resourceType": "ValueSet",
+    "id": "dopamine",
+    "url": "http://test-url.com/fhir/ValueSet/dopamine",
+    "version": "1.0.0",
+    "title": "Dopamine",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                "concept": [
+                    {
+                      "code": "3628",
+                      "display": "Dopamine"
+                    },
+                    {
+                      "code": "1292886",
+                      "display": "Dopamine Hydrochloride 3.2 MG/ML"
+                    },
+                    {
+                      "code": "1292750",
+                      "display": "Dopamine Hydrochloride 1.6 MG/ML"
+                    },
+                    {
+                      "code": "1114887",
+                      "display": "Dopamine Hydrochloride 80 MG/ML"
+                    },
+                    {
+                      "code": "1292739",
+                      "display": "Dopamine Hydrochloride 0.8 MG/ML"
+                    },
+                    {
+                      "code": "1160755",
+                      "display": "Dopamine Injectable Product"
+                    },
+                    {
+                      "code": "1114873",
+                      "display": "Dopamine Hydrochloride 160 MG/ML"
+                    },
+                    {
+                      "code": "1743862",
+                      "display": "Dopamine Injection"
+                    },
+                    {
+                      "code": "1114879",
+                      "display": "Dopamine Hydrochloride 40 MG/ML"
+                    }
+                ]
+            }
+        ]
+    }
+}

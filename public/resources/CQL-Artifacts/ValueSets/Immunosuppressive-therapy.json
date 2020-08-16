@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "immunosuppressive-therapy",
+    "url": "http://test-url.com/fhir/ValueSet/immunosuppressive-therapy",
+    "version": "1.0.0",
+    "title": "Immunosuppressive therapy",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "86553008",
+                      "display": "Immunosuppressive therapy (procedure)"
+                    }
+                ]
+            }
+        ]
+    }
+}

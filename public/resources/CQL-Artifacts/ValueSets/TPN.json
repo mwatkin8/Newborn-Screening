@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "tpn",
+    "url": "http://test-url.com/fhir/ValueSet/tpn",
+    "version": "1.0.0",
+    "title": "Total parenteral nutrition (TPN)",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "789708003",
+                      "display": "Total parenteral nutrition agent (substance)"
+                    }
+                ]
+            }
+        ]
+    }
+}

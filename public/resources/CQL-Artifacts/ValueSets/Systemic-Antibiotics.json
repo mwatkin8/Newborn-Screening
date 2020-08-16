@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "systemic-antibiotics",
+    "url": "http://test-url.com/fhir/ValueSet/systemic-antibiotics",
+    "version": "1.0.0",
+    "title": "Systemic antibiotics before newborn screening",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                "concept": [
+                    {
+                      "code": "1153194",
+                      "display": "Ampicillin Injectable Product"
+                    }
+                ]
+            }
+        ]
+    }
+}

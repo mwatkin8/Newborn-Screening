@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "prbc-transfusion",
+    "url": "http://test-url.com/fhir/ValueSet/prbc-transfusion",
+    "version": "1.0.0",
+    "title": "Packed Red Blood Cell (PRBC) Transfusion",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                        "code": "71493000",
+                        "display": "Transfusion of packed red blood cells (procedure)"
+                    }
+                ]
+            }
+        ]
+    }
+}

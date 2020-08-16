@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="img/icons/dark-icon.png">
-    <title>Results My Way</title>
+    <title>ResultsMyWay</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -20,7 +20,7 @@
             <nav class="col-md-2 d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
                     <h4 class="title d-flex align-items-center px-3 mt-1 mb-1 text-muted">
-                        Results My Way &nbsp;<a href="/"><img src="img/icons/dark-icon.png" height="30" width="30"></a>
+                        ResultsMyWay &nbsp;<a href="/"><img src="img/icons/dark-icon.png" height="30" width="30"></a>
                         <!--a class="d-flex align-items-center text-muted" href="#">
                         <span data-feather="plus-circle"></span>
                     </a-->
@@ -79,7 +79,12 @@
                         Account Information
                     </a>
                 </li>
-
+                <li class="nav-item">
+                  <a class="nav-link" href="/">
+                    <span data-feather="log-out"></span>
+                    Log Out
+                  </a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -96,7 +101,10 @@
                             <h1>Knowledge Library</h1>
                             <br>
                             <h3>Find and access useful articles from credible sources</h3>
-                            <br><br><br>
+                            <br>
+                            <p><button class="btn btn-lg btn-outline-light" onclick="libraryModal()" role="button">Make Suggestion</button></p>
+                            <!-- A modal element for suggesting a new article -->
+                            <br>
                         </div>
                     </div>
                 </div>
@@ -117,6 +125,40 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
+        </div>
+        <div id="library-modal" class="modal">
+            <!-- The modal content -->
+            <div class="modal-content">
+                <h4 class="border-bottom pb-2">Please provide the following</h4>
+                <div class="row"><div class="col-md-6"><h6 class="pt-2" style="float:right;">Collection: <select style="width:100px;" class="text-muted pt-2" id="library-type">
+                                <option value="">Select...</option>
+                                <option value="basic">Basic</option>
+                                <option value="nutrition">Nutrition</option>
+                                <option value="media">Media</option>
+                            </select></h6></div>
+                    <div class="col-md-6"><h6 class="pt-2" style="float:left;">Type: <select style="width:100px;" class="text-muted pt-2" id="library-type">
+                            <option value="">Select...</option>
+                            <option value="basic">Website</option>
+                            <option value="nutrition">Factsheet</option>
+                            <option value="media">Feed</option>
+                            <option value="video">Video</option>
+                        </select></h6></div>
+                </div>
+                <h6 class="pt-2">Display Name</h6>
+                <input style="width:90%;" type="text" id="primary-fname" class="form-control" placeholder="">
+                <h6 class="pt-2">URL</h6>
+                <input style="width:90%;" type="text" id="primary-fname" class="form-control" placeholder="">
+                <h6 class="pt-2">Comments:</h6>
+                <textarea id="modal-text" rows="5" cols="1" name="message-input"></textarea>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button style="float:right;" class="btn btn-primary" onclick="closeModal('library')">Submit</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button  style="float:left;" class="btn btn-primary" onclick="closeModal('library')">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div style="padding-left:20px;padding-right:20px;">
             <ul class="nav nav-tabs">

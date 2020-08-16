@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "liver-disease",
+    "url": "http://test-url.com/fhir/ValueSet/liver-disease",
+    "version": "1.0.0",
+    "title": "Liver disease",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                        "code": "235856003",
+                        "display": "Disorder of liver (disorder)"
+                    }
+                ]
+            }
+        ]
+    }
+}

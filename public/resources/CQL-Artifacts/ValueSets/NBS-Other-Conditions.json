@@ -1,0 +1,63 @@
+{
+    "resourceType": "ValueSet",
+    "id": "nbs-other-conditions",
+    "url": "http://test-url.com/fhir/ValueSet/nbs-other-conditions",
+    "version": "1.0.0",
+    "title": "NBS Other Conditions",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "77480004",
+                      "display": "Congenital biliary atresia (disorder)"
+                    },
+                    {
+                      "code": "65390006",
+                      "display": "Perinatal intestinal perforation (disorder)"
+                    },
+                    {
+                      "code": "118928003",
+                      "display": "Disorder of abdominal wall (disorder)"
+                    },
+                    {
+                      "code": "1125006",
+                      "display": "Sepsis during labor (disorder)"
+                    },
+                    {
+                      "code": "22455005",
+                      "display": "Cytomegaloviral retinitis (disorder)"
+                    },
+                    {
+                      "code": "42399005",
+                      "display": "Renal failure syndrome (disorder)"
+                    },
+                    {
+                      "code": "41040004",
+                      "display": "Complete trisomy 21 syndrome (disorder)"
+                    },
+                    {
+                      "code": "15706008",
+                      "display": "Tadpole edema virus T18 (organism)"
+                    },
+                    {
+                      "code": "73705007",
+                      "display": "Tadpole edema virus T13 (organism)"
+                    }
+                ]
+            },
+            {
+                "system": "http://hl7.org/fhir/sid/icd-10-cm",
+                "concept": [
+                    {
+                      "code": "Q44.2",
+                      "display": "Atresia of bile ducts"
+                    }
+                ]
+            }
+        ]
+    }
+}

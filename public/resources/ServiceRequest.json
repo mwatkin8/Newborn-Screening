@@ -1,6 +1,12 @@
 {
   "resourceType": "ServiceRequest",
   "id": "nbs-servicerequest",
+  "identifier": [
+      {
+          "system": "resultsmyway",
+          "value": "nbs-servicerequest"
+      }
+  ],
   "status": "",
   "intent": "original-order",
   "subject": {

@@ -1,0 +1,42 @@
+{
+    "resourceType": "ValueSet",
+    "id": "topical-iodine",
+    "url": "http://test-url.com/fhir/ValueSet/topical-iodine",
+    "version": "1.0.0",
+    "title": "Topical Iodine",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                "concept": [
+                    {
+                      "code": "312564",
+                      "display": "Povidone-Iodine 100 MG/ML Topical Solution"
+                    },
+                    {
+                      "code": "1547121",
+                      "display": "Povidone-Iodine 100 MG/ML Topical Solution [Triadine]"
+                    },
+                    {
+                      "code": "1376395",
+                      "display": "Povidone-Iodine 100 MG/ML Topical Solution [Loris]"
+                    },
+                    {
+                      "code": "211109",
+                      "display": "Povidone-Iodine 100 MG/ML Topical Solution [Clinidine]"
+                    },
+                    {
+                      "code": "1044265",
+                      "display": "Povidone-Iodine 100 MG/ML Topical Solution [Ovadine]"
+                    },
+                    {
+                      "code": "211108",
+                      "display": "Povidone-Iodine 100 MG/ML Topical Solution [Betadine]"
+                    }
+                ]
+            }
+        ]
+    }
+}

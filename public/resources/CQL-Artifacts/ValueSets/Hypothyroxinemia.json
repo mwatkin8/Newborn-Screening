@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "hypothyroxinemia",
+    "url": "http://test-url.com/fhir/ValueSet/hypothyroxinemia",
+    "version": "1.0.0",
+    "title": "Hypothyroxinemia of preterm birth",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "119181000119104",
+                      "display": "Hypothyroxinemia of prematurity (disorder)"
+                    }
+                ]
+            }
+        ]
+    }
+}

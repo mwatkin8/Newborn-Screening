@@ -1,0 +1,51 @@
+{
+    "resourceType": "ValueSet",
+    "id": "low-birth-weight",
+    "url": "http://test-url.com/fhir/ValueSet/low-birth-weight",
+    "version": "1.0.0",
+    "title": "Low Birth Weight",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "276610007",
+                      "display": "Low birth weight infant (disorder)"
+                    }
+                ]
+            },
+            {
+                "system": "http://hl7.org/fhir/sid/icd-10-cm",
+                "concept": [
+                    {
+                      "code": "P07.10",
+                      "display": "Other low birth weight newborn, unspecified weight"
+                    },
+                    {
+                      "code": "P07.14",
+                      "display": "Other low birth weight newborn, 1000-1249 grams"
+                    },
+                    {
+                      "code": "P07.15",
+                      "display": "Other low birth weight newborn, 1250-1499 grams"
+                    },
+                    {
+                      "code": "P07.16",
+                      "display": "Other low birth weight newborn, 1500-1749 grams"
+                    },
+                    {
+                      "code": "P07.17",
+                      "display": "Other low birth weight newborn, 1750-1999 grams"
+                    },
+                    {
+                      "code": "P07.18",
+                      "display": "Other low birth weight newborn, 2000-2499 grams"
+                    }
+                ]
+            }
+        ]
+    }
+}

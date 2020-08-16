@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "blood-transfusion",
+    "url": "http://test-url.com/fhir/ValueSet/blood-transfusion",
+    "version": "1.0.0",
+    "title": "Blood Transfusion",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                      "code": "225068002",
+                      "display": "Red cell exchange transfusion (procedure)"
+                    }
+                ]
+            }
+        ]
+    }
+}

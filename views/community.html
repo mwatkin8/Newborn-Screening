@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="img/icons/dark-icon.png">
-    <title>Results My Way</title>
+    <title>ResultsMyWay</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -20,7 +20,7 @@
             <nav class="col-md-2 d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
                     <h4 class="title d-flex align-items-center px-3 mt-1 mb-1 text-muted">
-                        Results My Way &nbsp;<a href="/"><img src="img/icons/dark-icon.png" height="30" width="30"></a>
+                        ResultsMyWay &nbsp;<a href="/"><img src="img/icons/dark-icon.png" height="30" width="30"></a>
                         <!--a class="d-flex align-items-center text-muted" href="#">
                         <span data-feather="plus-circle"></span>
                     </a-->
@@ -79,7 +79,12 @@
                         Account Information
                     </a>
                 </li>
-
+                <li class="nav-item">
+                  <a class="nav-link" href="/">
+                    <span data-feather="log-out"></span>
+                    Log Out
+                  </a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -97,7 +102,7 @@
                             <h1>Community</h1>
                             <h3>Connect with national organizations, advocacy groups, and other parents online through social media</h3>
                             <br>
-                            <p><a class="btn btn-lg btn-outline-light" href="https://rarediseases.org/rare-diseases/phenylketonuria/" role="button">Visit NORD</a></p>
+                            <p><button class="btn btn-lg btn-outline-light" onclick="communityModal()" role="button">Make Suggestion</button></p>
                         </div>
                     </div>
                 </div>
@@ -120,7 +125,27 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-
+        <div id="community-modal" class="modal">
+            <!-- The modal content -->
+            <div class="modal-content">
+                <h4 class="border-bottom pb-2">Please provide the following</h4>
+                <span class="pt-2"><img class="rounded-circle" style="float:left" width="30" height="30" src="img/icons/facebook.png"/><input style="width:90%;" type="text" id="primary-fname" class="form-control" placeholder="optional"></span>
+                <span class="pt-2"><img class="rounded-circle" style="float:left" width="30" height="30" src="img/icons/instagram.png"/><input style="width:90%;" type="text" id="primary-fname" class="form-control" placeholder="optional"></span>
+                <span class="pt-2"><img class="rounded-circle" style="float:left" width="30" height="30" src="img/icons/twitter.png"/><input style="width:90%;" type="text" id="primary-fname" class="form-control" placeholder="optional"></span>
+                <h6 class="pt-2">Website</h6>
+                <input style="width:90%;" type="text" id="primary-fname" class="form-control" placeholder="optional">
+                <h6 class="pt-2">Comments:</h6>
+                <textarea id="modal-text" rows="5" cols="1" name="message-input"></textarea>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button style="float:right;" class="btn btn-primary" onclick="closeModal('community')">Submit</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button  style="float:left;" class="btn btn-primary" onclick="closeModal('community')">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container marketing">
 
             <!-- Three columns of text below the carousel -->

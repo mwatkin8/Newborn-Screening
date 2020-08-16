@@ -196,7 +196,7 @@ ul{
 }
 
 .chart-color1 {
-  fill: #7659F5; //purple
+  fill: #ff8a80; //red
 }
 
 .chart-color2 {
@@ -210,4 +210,12 @@ ul{
 .needle,
 .needle-center {
   fill: #464A4F;
+}
+
+.rate:hover{
+    stroke: #0275d8;
+}
+
+.headericon:after{
+    display:inline-block;
 }

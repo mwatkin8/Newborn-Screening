@@ -17,8 +17,8 @@ Open the Terminal app (Mac) or the Docker Quickstart Terminal (Windows), go to t
 Launch the server with the command <code>docker-compose -p nbs up --build &</code>
 
 Open browser to:
-*  http://localhost:8080/ (Mac)
-*  http://192.168.99.100:8080/ (Windows)
+*  http://localhost:8000/ (Mac)
+*  http://192.168.99.100:8000/ (Windows)
 
 Additional Docker commands:
 * View server output: <code>docker logs nbs\_app_1</code>

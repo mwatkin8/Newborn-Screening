@@ -1,0 +1,22 @@
+{
+    "resourceType": "ValueSet",
+    "id": "pregnancy-fatty-liver",
+    "url": "http://test-url.com/fhir/ValueSet/pregnancy-fatty-liver",
+    "version": "1.0.0",
+    "title": "Fatty Liver of Pregnancy",
+    "status": "draft",
+    "publisher": "mwatkins",
+    "compose": {
+        "include": [
+            {
+                "system": "http://snomed.info/sct",
+                "concept": [
+                    {
+                        "code": "716379000",
+                        "display": "Acute fatty liver of pregnancy (disorder)"
+                    }
+                ]
+            }
+        ]
+    }
+}
