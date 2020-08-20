@@ -11,6 +11,10 @@ This example uses Docker, the links below can help you get Docker installed.
     * Download latest .exe file
     * Follow installer
 
+##CQL Repo
+git clone --single-branch --branch develop https://github.com/DBCG/cqf-ruler.git
+mvn jetty:run -am --projects cqf-ruler-r4 
+
 ## Start the app server
 Open the Terminal app (Mac) or the Docker Quickstart Terminal (Windows), go to the home directory of this project.
 

@@ -1,0 +1,724 @@
+{
+    "id": "infant-factors-form",
+    "status": "draft",
+    "name": "infant-factors-form",
+    "title": "Infant Factors",
+    "resourceType": "Questionnaire",
+    "meta": {
+        "profile": [
+            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+        ]
+    },
+    "extension": [
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-library",
+            "valueCanonical": "http://localhost:8080/cqf-ruler-r4/fhir/Library/infant-factors"
+        }
+    ],
+    "item": [
+        {
+            "type": "choice",
+            "code": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "67704-7",
+                    "display": "Feeding types"
+                }
+            ],
+            "linkId": "/feeding-types",
+            "text": "Feeding type used for the baby within 3 hours prior to NBS collection.",
+            "answerOption" : [
+                {
+                    "valueCoding" : {
+
+                        "code": "LA16914-6",
+                        "display": "Breast milk",
+                        "system": "http://loinc.org"
+
+                    }
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA16915-3",
+                        "display": "Lactose formula",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA14041-0",
+                        "display": "Lactose free formula (including soy or hydrolyzed)",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA16917-9",
+                        "display": "NPO",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA12418-2",
+                        "display": "TPN",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA16918-7",
+                        "display": "Carnitine",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA16919-5",
+                        "display": "MCT (medium-chain triglyceride) oil",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA16920-3",
+                        "display": "IV dextrose",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueString" :
+                    {
+                        "code": "LA46-8",
+                        "display": "Other",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA137-2",
+                        "display": "None",
+                        "system": "http://loinc.org"
+                    }
+
+                },
+                {
+                    "valueCoding" :
+                    {
+                        "code": "LA4489-6",
+                        "display": "Unknown",
+                        "system": "http://loinc.org"
+                    }
+
+                }
+
+            ]
+        },
+        {
+            "type": "group",
+            "code": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "57713-0",
+                    "display": "Infant factors that affect newborn screening interpretation"
+
+                }
+            ],
+            "linkId": "/infant-factors",
+            "text": "Infant factors that could impact NBS interpretation.",
+            "item":[
+                {
+                    "linkId": "/infant-factors/LA137-2",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA137-2",
+                            "display": "None"
+                        }
+                    ],
+                    "text": "None",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Infant in NICU at time of specimen collection"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA12419-0",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA12419-0",
+                            "display": "Infant in NICU at time of specimen collection"
+                        }
+                    ],
+                    "text": "Infant in NICU at time of specimen collection",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Infant in special care setting (other than ICU) at time of specimen collection"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25801-4",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25801-4",
+                            "display": "Infant in special care setting (other than ICU) at time of specimen collection"
+                        }
+                    ],
+                    "text": "Infant in special care setting (other than ICU) at time of specimen collection",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Preterm/Low birth weight (LBW)"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25802-2",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25802-2",
+                            "display": "Preterm/Low birth weight (LBW)"
+                        }
+                    ],
+                    "text": "Preterm/Low birth weight (LBW)",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Any blood product transfusion (including ECLS/ECMO)"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA12417-4",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA12417-4",
+                            "display": "Any blood product transfusion (including ECLS/ECMO)"
+                        }
+                    ],
+                    "text": "Any blood product transfusion (including ECLS/ECMO)",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Dopamine"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA16923-7",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16923-7",
+                            "display": "Dopamine"
+                        }
+                    ],
+                    "text": "Dopamine",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Topical iodine"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA16924-5",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16924-5",
+                            "display": "Topical iodine"
+                        }
+                    ],
+                    "text": "Topical iodine",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Acute illness"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25803-0",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25803-0",
+                            "display": "Acute illness"
+                        }
+                    ],
+                    "text": "Acute illness",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Hypothyroxinemia of preterm birth"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25804-8",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25804-8",
+                            "display": "Hypothyroxinemia of preterm birth"
+                        }
+                    ],
+                    "text": "Hypothyroxinemia of preterm birth",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Significant hypoxia"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25812-1",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25812-1",
+                            "display": "Significant hypoxia"
+                        }
+                    ],
+                    "text": "Significant hypoxia",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Immature hypothalamic/pituitary axis"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25805-5",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25805-5",
+                            "display": "Immature hypothalamic/pituitary axis"
+                        }
+                    ],
+                    "text": "Immature hypothalamic/pituitary axis",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Immature liver enzymes"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25806-3",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25806-3",
+                            "display": "Immature liver enzymes"
+                        }
+                    ],
+                    "text": "Immature liver enzymes",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Immature renal system"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25807-1",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25807-1",
+                            "display": "Immature renal system"
+                        }
+                    ],
+                    "text": "Immature renal system",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Iodine deficiency"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25809-7",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25809-7",
+                            "display": "Iodine deficiency"
+                        }
+                    ],
+                    "text": "Iodine deficiency",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Liver disease"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25810-5",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25810-5",
+                            "display": "Liver disease"
+                        }
+                    ],
+                    "text": "Liver disease",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Other conditions, such as biliary atresia, intestinal perforation, abdominal wall defects, septicemia, CMV, renal failure, T21, T18, T13"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25811-3",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25811-3",
+                            "display": "Other conditions, such as biliary atresia, intestinal perforation, abdominal wall defects, septicemia, CMV, renal failure, T21, T18, T13"
+                        }
+                    ],
+                    "text": "Other conditions, such as biliary atresia, intestinal perforation, abdominal wall defects, septicemia, CMV, renal failure, T21, T18, T13",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Parenteral steroid treatment"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA16925-2",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16925-2",
+                            "display": "Parenteral steroid treatment"
+                        }
+                    ],
+                    "text": "Parenteral steroid treatment",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Systemic antibiotics before newborn screening"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA12420-8",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA12420-8",
+                            "display": "Systemic antibiotics before newborn screening"
+                        }
+                    ],
+                    "text": "Systemic antibiotics before newborn screening",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Meconium ileus or other bowel obstruction"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA16927-8",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16927-8",
+                            "display": "Meconium ileus or other bowel obstruction"
+                        }
+                    ],
+                    "text": "Meconium ileus or other bowel obstruction",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Thoracic surgery involving thymectomy"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25815-4",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25815-4",
+                            "display": "Thoracic surgery involving thymectomy"
+                        }
+                    ],
+                    "text": "Thoracic surgery involving thymectomy",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Immunosuppressive therapy of baby or mother"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25808-9",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25808-9",
+                            "display": "Immunosuppressive therapy of baby or mother"
+                        }
+                    ],
+                    "text": "Immunosuppressive therapy of baby or mother",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Total parenteral nutrition (TPN) or similar feeding"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25816-2",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25816-2",
+                            "display": "Total parenteral nutrition (TPN) or similar feeding"
+                        }
+                    ],
+                    "text": "Total parenteral nutrition (TPN) or similar feeding",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Special lactose-free diet"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25813-9",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25813-9",
+                            "display": "Special lactose-free diet"
+                        }
+                    ],
+                    "text": "Special lactose-free diet",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Special low protein diet"
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/LA25814-7",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA25814-7",
+                            "display": "Special low protein diet"
+                        }
+                    ],
+                    "text": "Special low protein diet",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "linkId": "/infant-factors/LA46-8",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA46-8",
+                            "display": "Other"
+                        }
+                    ],
+                    "text": "Other",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "The narrative for infant factors that could impact NBS interpretation."
+                            }
+                        }
+                    ],
+                    "linkId": "/infant-factors/67703-9",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "67703-9",
+                            "display": "Other infant factors that affect newborn screening interpretation Narrative"
+                        }
+                    ],
+                    "text": "Specify Other:",
+                    "type": "text",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                    "valueExpression": {
+                        "language": "text/cql",
+                        "expression": "The date of last blood product transfusion"
+                    }
+                }
+            ],
+            "linkId": "/62317-3",
+            "code": [
+                {
+                    "code": "62317-3",
+                    "display": "Date of last blood product transfusion"
+                }
+            ],
+            "text": "The date of last blood product transfusion",
+            "type": "date",
+            "required": false
+        }
+    ]
+}

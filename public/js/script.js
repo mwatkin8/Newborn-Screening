@@ -1,18 +1,464 @@
 async function resultInit(){
     loadingModal();
     drawTimeline();
-    deleteRecords();
-    await resultSummary();
+    await resultPre();
     closeLoadingModal();
+}
+async function resultPre(){
+    let div = d3.select('#result-content');
+    div.html('');
+    d3.select('#nav-pre').classed('active',true);
+    d3.select('#nav-summary').classed('active',false);
+    d3.select('#nav-pdf').classed('active',false);
+    d3.select('#nav-fhir').classed('active',false);
+    let container = div.append('div').attr('class','container marketing');
+    let row = container.append('div').attr('class','row featurette');
+    let col = row.append('div').attr('class','col-md-7');
+    let header = col.append('h2').attr('class','featurette-heading').text('Review ');
+    header.append('span').attr('class','text-muted').text('the form below');
+    col.append('p').attr('class','lead').text('The interpretation of newborn screening results can, in some cases, vary depending on the specific health history of the infant and mother.')
+    col.append('p').attr('class','lead').html('The questions below may have prepopulated "<span style="stroke:green" data-feather="check-circle"></span>" answers drawn from existing clinical records.')
+    col.append('p').attr('class','lead').html('<b><i>Please mark any additional relevant factors</b></i> that may not have been detected in existing clinical records, then press "Submit".')
+    let img = row.append('div').attr('class','col-md-5');
+    img.append('img').attr('class','featurette-image img-fluid mx-auto').attr('src','../img/icons/waiting.png').attr('alt','pre-results');
+    div.append('div').html('<hr />')
+    row = div.append('div').attr('class','row text-center');
+    row.append('div').attr('id','infant-header').attr('class','col-md-6');
+    row.append('div').attr('id','maternal-header').attr('class','col-md-6');
+    row = div.append('div').attr('class','row');
+    row.append('div').attr('id','infant-qbody').attr('class','col-md-6');
+    row.append('div').attr('id','maternal-qbody').attr('class','col-md-6');
+    await render('infant');
+    //await render('maternal');
+    feather.replace()
+    //Add spacing elements to improve form readability
+    div.append('hr');
+    //Add a submit button
+    div = div.append('div').attr('class','text-center');
+    div.append('button').attr('class','btn btn-lg btn-primary').attr('onclick',"generateResponse()").text('Submit')
+}
+
+
+
+/*
+ This function initializes the form rendering.
+*/
+async function render(type){
+    let url,patient;
+    //Query the questionnaires
+    if (type === 'infant'){
+        patient = 'patient-infant'
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Questionnaire?name=infant-factors-form';
+    }
+    else{
+        patient = 'patient-mother'
+        url = 'http://localhost:8080/cqf-ruler-r4/fhir/Questionnaire?name=maternal-factors-form';
+    }
+    let response = await fetchResource(url)
+    let questionnaire = response.entry[0].resource;
+    //Execute CQL
+    url = questionnaire.extension[0].valueCanonical + '/$evaluate';
+    cql = await runCQL(url,patient);
+    console.log(cql);
+    dict = await buildCQLDict(cql)
+    //Add a header with the questionnaire title and publisher
+    let header = d3.select('#' + type + '-header');
+    let title = header.append('h2').text(questionnaire.title + ' ');
+    //Add a button to allow the user to open the modal and view the raw Questionnaire JSON
+    if(type === 'infant'){
+        title.append('button').attr('class','btn btn-sm btn-primary').attr('onclick',"questionnaireModal(true,'infant')").text('FHIR');
+        title.append('button').attr('class','btn btn-sm btn-primary ml-2').attr('onclick',"cqlModal('infant')").text('CQL');
+
+    }else{
+        title.append('button').attr('class','btn btn-sm btn-primary').attr('onclick',"questionnaireModal(true,'maternal')").text('FHIR');
+        title.append('button').attr('class','btn btn-sm btn-primary ml-2').attr('onclick',"cqlModal('maternal')").text('CQL');
+    }
+    await buildForm(questionnaire,type,dict)
+}
+async function runCQL(url,patient){
+    return await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "resourceType": "Parameters",
+          "parameter": [
+            {
+              "name": "context",
+              "valueString": "Patient"
+            },
+            {
+              "name": "patientId",
+              "valueString": patient
+            },
+            {
+              "name": "dataEndpoint",
+              "resource": {
+                "resourceType": "Endpoint",
+                "address": "http://localhost:8080/cqf-ruler-r4/fhir",
+                "status": "active",
+                "connectionType": {
+                  "code": "hl7-fhir-rest",
+                  "display": "HL7 FHIR"
+                },
+                "payloadType": [
+                  {
+                    "coding": [
+                      {
+                        "code": "urn:ihe:pcc:handp:2008",
+                        "display": "History and Physical Specification"
+                      }
+                    ]
+                  }
+                ],
+                "header": []
+              }
+            },
+            {
+              "name": "terminologyEndpoint",
+              "resource": {
+                "resourceType": "Endpoint",
+                "address": "http://localhost:8080/cqf-ruler-r4/fhir",
+                "header": []
+              }
+            }
+          ]
+        })
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{return responseJson});
+}
+
+async function buildCQLDict(bundle){
+    d = {}
+    bundle.entry.forEach((exp, i) => {
+        if(exp.fullUrl !== 'Patient'){
+            let v = exp.resource.parameter[0].valueString;
+            if (v === '[]'){
+                d[exp.fullUrl] = ''
+            }
+            else{
+                v = v.substring(1, v.length-1);
+                d[exp.fullUrl] = v;
+            }
+        }
+    });
+    return d
+}
+/*
+ Once loaded, parse the questionnaire to build the form
+*/
+async function buildForm(questionnaire,type,dict){
+    //Select thee HTML div created to hold the form body
+    let qbody = d3.select('#' + type + '-qbody');
+    //Loop through each item in the questionnaire
+    questionnaire.item.forEach((item, i) => {
+        if(item.type === 'group'){
+            handleGroup(type,qbody,item,dict);
+        }
+        else{
+            qbody.append('hr');
+            switch(item.type) {
+                case 'string':
+                    handleString(type,qbody,item,dict);
+                    break;
+                case 'date':
+                    handleDate(type,qbody,item,dict);
+                    break;
+                case 'choice':
+                    handleChoice(type,qbody,item,dict);
+                    break;
+                case 'integer':
+                    handleInteger(type,qbody,item,dict);
+                    break;
+                case 'boolean':
+                    handleBoolean(type,qbody,item,dict);
+                    break;
+                case 'text':
+                    handleText(type,qbody,item,dict);
+                    break;
+                default:
+                    //Print other question types
+                    console.log(item);
+            }
+        }
+
+    });
+}
+
+/*
+ A "Group" is a type of questionnaire question, it acts as a parent of sub-questions.
+*/
+function handleGroup(type,qbody,group){
+    //Add spacing elements to improve form readability
+    qbody.append('hr');
+    qbody.append('h6').attr('class','mb-3').text(group.text);
+    //For each question in the group, determine type and add it to the form
+    group.item.forEach((question, i) => {
+        if(i !== 0){
+            qbody.append('br');
+        }
+        let select;
+        switch(question.type) {
+            case 'string':
+                handleString(type,qbody,question,dict);
+                break;
+            case 'date':
+                handleDate(type,qbody,question,dict);
+                break;
+            case 'choice':
+                handleChoice(type,qbody,question,dict);
+                break;
+            case 'integer':
+                handleInteger(type,qbody,question,dict);
+                break;
+            case 'boolean':
+                handleBoolean(type,qbody,question,dict);
+                break;
+            case 'group':
+                handleGroup(type,qbody,question,dict);
+                break;
+            case 'text':
+                handleText(type,qbody,question,dict);
+                break;
+            default:
+                //Print other question types
+                console.log(question);
+        }
+    });
+}
+
+/*
+Each type of question requires a different type of display, the functions below
+build each type of HTML input used in the form
+*/
+function handleString(type,qbody,question,dict){
+    let linkId = question.linkId.split('/').join('_');
+    qbody.append('label').attr('for', linkId).text(question.text + ' ');
+    qbody.append('input').attr('type','text').attr('class','form-control ' + type).attr('id',linkId);
+}
+function handleText(type,qbody,question,dict){
+    let linkId = question.linkId.split('/').join('_');
+    let label = qbody.append('label').attr('for', linkId).text(question.text + '  ');
+    if(question.hasOwnProperty('extension')){
+        let r = dict[question.extension[0].valueExpression.expression];
+        if(r !== ''){
+            label.append('span').attr('data-feather','check-square').attr('onclick','viewCQLResult(' + value[0] + ')').style('stroke','green');
+            qbody.append('textarea').attr('class','form-control ' + type).attr('id',linkId).attr('rows','4').attr('cols','50').text(value[1]);
+        }
+        else{
+            qbody.append('textarea').attr('class','form-control ' + type).attr('id',linkId).attr('rows','4').attr('cols','50');
+        }
+    }
+    else{
+        qbody.append('textarea').attr('class','form-control ' + type).attr('id',linkId).attr('rows','4').attr('cols','50');
+    }
+}
+function handleDate(type,qbody,question,dict){
+    let linkId = question.linkId.split('/').join('_');
+    let label = qbody.append('label').attr('id','icon-col-' + linkId).attr('for', linkId).text(question.text + ' ');
+    if(question.hasOwnProperty('extension')){
+        let r = dict[question.extension[0].valueExpression.expression];
+        if(r !== ''){
+            let tuple = r.split('Tuple ')[1];
+            let value = JSON.parse(tuple);
+            console.log(value);
+            label.append('span').attr('data-feather','check-square').attr('onclick','viewCQLResult(' + value[0] + ')').style('stroke','green');
+            let d = new Date(value[0]);
+            let y = d.getFullYear();
+            let m = (d.getMonth() + 1).toString();
+            let day = d.getDate().toString();
+            if(m.length === 1){
+                m = '0' + m
+            }
+            if(day.length === 1){
+                day = '0' + day
+            }
+            let date = y + "-" + m + "-" + day;
+            qbody.append('input').attr('type','date').attr('class','form-control ' + type).attr('id',linkId).attr('value',date);
+        }
+        else{
+            qbody.append('input').attr('type','date').attr('class','form-control ' + type).attr('id',linkId);
+        }
+    }
+    else{
+        qbody.append('input').attr('type','date').attr('class','form-control ' + type).attr('id',linkId);
+    }
+}
+function handleChoice(type,qbody,question,dict){
+    let linkId = question.linkId.split('/').join('_');
+    qbody.append('label').attr('id','icon-col-' + linkId).attr('for', linkId).text(question.text + ' ');
+    select = qbody.append('select').attr('name',linkId).attr('id',linkId).attr('class','custom-select d-block w-100 ' + type);
+    select.append('option').attr('id',linkId + 'def').attr('value','default').attr('selected','selected').text('Select...');
+    question.answerOption.forEach((option, i) => {
+        select.append('option').attr('id',option.valueCoding.code).attr('value',option.valueCoding.code).text(option.valueCoding.display);
+    });
+}
+function handleInteger(type,qbody,question,dict){
+    let linkId = question.linkId.split('/').join('_');
+    qbody.append('label').attr('for', linkId).text(question.text + '  ');
+    qbody.append('input').attr('type','number').attr('class','form-control ' + type).attr('id',linkId);
+}
+function handleBoolean(type,qbody,question,dict){
+    let linkId = question.linkId.split('/').join('_');
+    let label = qbody.append('label').attr('for', linkId).html(question.text + ' ');
+    //True option
+    if(question.hasOwnProperty('extension')){
+        let r = dict[question.extension[0].valueExpression.expression];
+        if(r !== ''){
+            let tuple = r.split('Tuple ')[1];
+            let value = JSON.parse(tuple);
+            label.append('input').attr('class',type).attr('id',linkId).attr('name',linkId).attr('type','checkbox').attr('checked',true).style('margin-right','5px').lower();
+            label.append('span').attr('data-feather','check-circle').style('stroke','green');
+            label.append('button').attr('class','btn btn-sm btn-primary ml-2').attr('onclick','viewCQLResult(\'' + value.Type + '\',\'' + value.ID + '\')').html('<span data-feather="file-text"></span>')
+        }
+        else{
+            label.append('input').attr('class',type).attr('id',linkId).attr('name',linkId).attr('type','checkbox').style('margin-right','5px').lower();
+        }
+    }
+    else{
+        label.append('input').attr('class',type).attr('id',linkId).attr('name',linkId).attr('type','checkbox').style('margin-right','5px').lower();
+    }
+}
+
+async function viewCQLResult(type,id){
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/' + type + '/' + id;
+    r = await fetchResource(url);
+    let modal = d3.select('#cql-resource-modal');
+    modal.style('display','block');
+    d3.select('#cql-resource-json').text(JSON.stringify(r, null, 5));
+}
+function questionnaireResponseModal(r){
+    let modal = d3.select('#questionnaire-response-modal');
+    modal.style('display','block');
+    d3.select('#questionnaire-response-json').text(JSON.stringify(r, null, 5));
+}
+
+//Create a pop-out modal to display the resource JSON for the Questionnaire and QuestionnaireResponse
+async function questionnaireModal(q,type){
+    let modal = d3.select('#questionnaire-modal');
+    modal.style('display','block');
+    let url,bundle,json;
+    //If the user clicks submit, then generate the QuestionnaireResponse and show that resource JSON in the modal
+    if(q){
+        if(type === 'infant'){
+            url = 'http://localhost:8080/cqf-ruler-r4/fhir/Questionnaire?name=infant-factors-form';
+        }
+        else{
+            url = 'http://localhost:8080/cqf-ruler-r4/fhir/Questionnaire?name=maternal-factors-form';
+        }
+        bundle = await fetchResource(url);
+        json =  bundle.entry[0].resource
+    }
+    else{
+        //If the user clicks the icon by the questionnaire title, show the Questionnaire resource JSON in the modal
+        console.log('show resource');
+    }
+    d3.select('#questionnaire-json').text(JSON.stringify(json, null, 5));
+}
+
+async function cqlModal(type){
+    let modal = d3.select('#cql-modal');
+    modal.style('display','block');
+    let url,bundle,cql;
+    //If the user clicks submit, then generate the QuestionnaireResponse and show that resource JSON in the modal
+    if(type === 'infant'){
+        r = await fetch('../resources/CQL-Artifacts/CQL/InfantFactors.cql');
+    }
+    else{
+        r = await fetch('../resources/CQL-Artifacts/CQL/MaternalFactors.cql');
+    }
+    cql = await r.text()
+    d3.select('#cql-json').text(cql);
+}
+
+async function generateResponse(){
+    //Fetch the json template
+    let response = await fetch('../resources/CQL-Artifacts/QResponse-Templates/infant-factors-form-response.json');
+    let r = await response.json();
+    let infant = d3.selectAll('.infant');
+    infant._groups[0].forEach((q, i) => {
+        let linkId = q.id.split('_').join('/');
+        let l = linkId.split('/');
+        let group = '';
+        if(l.length  > 2){
+            group = '/' + l[1];
+        }
+        buildAnswer(r,q,group,linkId)
+    });
+    questionnaireResponseModal(r);
+}
+
+async function buildAnswer(r,q,group,linkId){
+    r.item.forEach((item, i) => {
+        if(item.linkId === group){
+            item.item.forEach((child, i) => {
+                if(child.linkId === linkId){
+                    if(child.answer[0].hasOwnProperty('valueCoding')){
+                        let value = q.value;
+                        if(q.value === 'default'){
+                            value = 'LA137-2'
+                        }
+                        child.answer[0].valueCoding = {
+                            "code": value,
+                            "system": "http://loinc.org"
+                        }
+                    }
+                    else if(child.answer[0].hasOwnProperty('valueBoolean')){
+                        child.answer[0].valueBoolean = q.checked;
+                    }
+                    else if(child.answer[0].hasOwnProperty('valueDate')){
+                        child.answer[0].valueDate = q.value
+                    }
+                    else if(child.answer[0].hasOwnProperty('valueString')){
+                        child.answer[0].valueString = q.value
+                    }
+                    else{
+                        console.log(item);
+                    }
+                }
+            });
+        }
+        else{
+            if(item.linkId === linkId){
+                if(item.answer[0].hasOwnProperty('valueCoding')){
+                    let value = q.value;
+                    if(q.value === 'default'){
+                        value = 'LA137-2'
+                    }
+                    item.answer[0].valueCoding = {
+                        "code": value,
+                        "system": "http://loinc.org"
+                    }
+                }
+                else if(item.answer[0].hasOwnProperty('valueBoolean')){
+                    item.answer[0].valueBoolean = q.checked
+                }
+                else if(item.answer[0].hasOwnProperty('valueDate')){
+                    item.answer[0].valueDate = q.value
+                }
+                else if(item.answer[0].hasOwnProperty('valueString')){
+                    item.answer[0].valueString = q.value
+                }
+                else{
+                    console.log(item);
+                }
+            }
+        }
+    });
 }
 
 async function resultSummary(){
     let div = d3.select('#result-content');
     div.html('');
+    d3.select('#nav-pre').classed('active',false);
     d3.select('#nav-summary').classed('active',true);
     d3.select('#nav-pdf').classed('active',false);
     d3.select('#nav-fhir').classed('active',false);
-    if(nbs_bundle === undefined){
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
+    let bundle = await fetchResource(url);
+    if(bundle.total === 0){
         div.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
     }
     else{
@@ -276,13 +722,16 @@ function createGraph(el, code, percent, unit){
     needle.animateOn(chart, scale(percent));
 }
 
-function resultPDF(){
+async function resultPDF(){
     let div = d3.select('#result-content');
     div.html('');
+    d3.select('#nav-pre').classed('active',false);
     d3.select('#nav-summary').classed('active',false);
     d3.select('#nav-pdf').classed('active',true);
     d3.select('#nav-fhir').classed('active',false);
-    if(nbs_bundle === undefined){
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
+    let bundle = await fetchResource(url);
+    if(bundle.total === 0){
         div.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
     }
     else{
@@ -294,6 +743,7 @@ function resultPDF(){
 async function resultFHIR(){
     let div = d3.select('#result-content');
     div.html('');
+    d3.select('#nav-pre').classed('active',false);
     d3.select('#nav-summary').classed('active',false);
     d3.select('#nav-pdf').classed('active',false);
     d3.select('#nav-fhir').classed('active',true);
@@ -307,12 +757,15 @@ async function resultFHIR(){
     NBS result message:');
     div.append('br');
     let row = div.append('div').attr('class','row fhir-box');
-    if(nbs_bundle === undefined){
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
+    let bundle = await fetchResource(url);
+    if(bundle.total === 0){
         row.append('div').attr('id','whitespace').attr('class','col-md-12 text-center').style('padding-top','5%').style('padding-bottom','50%').html('<p><i>Please load a result message.</i></p>')
     }
     else{
         let col = row.append('div').attr('class','col-md-5 order-md-2 mb-4');
         let ul = col.append('ul');
+        let ids = await gatherIDs();
         ids.forEach((response, i) => {
             let li = ul.append('li').attr('class','fhir-li').attr('onclick','viewResource(this,\'' + response[0] + '\',\'' + response[1] + '\')');
             if(i === 0){
@@ -379,16 +832,30 @@ async function closeModal(type){
 async function loadUserORU(){
     let message = d3.select('#modal-text').node().value;
     closeModal('enter')
-    loadingModal();
-    await parseMessage(message);
-    closeLoadingModal();
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
+    let bundle = await fetchResource(url);
+    if(bundle.total === 0){
+        loadingModal();
+        await parseMessage(message);
+        closeLoadingModal();
+    }
+    else{
+        alert("First clear the server!")
+    }
 }
 async function loadSampleORU(){
-    let r = await fetch('sample.txt');
-    let message = await r.text();
-    loadingModal();
-    await parseMessage(message);
-    closeLoadingModal();
+    let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
+    let bundle = await fetchResource(url);
+    if(bundle.total === 0){
+        let r = await fetch('sample.txt');
+        let message = await r.text();
+        loadingModal();
+        await parseMessage(message);
+        closeLoadingModal();
+    }
+    else{
+        alert("First clear the server!")
+    }
 }
 
 let nbs_bundle,encounter,healthcareservice_hospital,healthcareservice_lab,
@@ -439,7 +906,6 @@ async function loadTemplates(){
 }
 
 let ids = []
-let d_count = 0; //counts the number of reports
 async function parseMessage(message){
     //let url = 'https://api.logicahealth.org/nbs/open/Patient?identifier=results-demo';
     let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Patient?identifier=results-demo'
@@ -467,26 +933,28 @@ async function parseMessage(message){
         vs_drcommenttype = await fetchResource(url);
         await loadTemplates();
         let lines = message.split('\n');
-        await lines.forEach(async (seg, i) => {
+        let d_count = 0; //counts the number of reports
+        lines.forEach((seg, i) => {
             let type = seg.split('|')[0];
             if (type === 'MSH'){
-                await parseMSH(seg);
+                parseMSH(seg);
             }
             if (type === 'PID'){
-                await parsePID(seg);
+                parsePID(seg);
             }
             if (type === 'PV1'){
-                await parsePV1(seg);
+                parsePV1(seg);
             }
             if (type === 'ORC'){
                 d_count += 1;
             }
         });
+        //Wait for observations to finish compiling
         await createReportTemplates(d_count);
         await parseReports(message);
-        //Wait for observations to finish compiling
-        await waitFor(1000);
+        window.d = 0;
         //Put all resources into a bundle to store on server
+        await waitFor(7000)
         await assembleBundle();
         let r = await assembleSubmit();
         ids = [];
@@ -506,28 +974,28 @@ async function createReportTemplates(d_count){
     }
 }
 
-let d = -1; //report index
-async function parseReports(message){
+function parseReports(message){
     let lines = message.split('\n');
-    await lines.forEach(async (seg, i) => {
+    d = -1; //report index
+    lines.forEach(async (seg, i) => {
         let type = seg.split('|')[0];
         if (type === 'ORC'){
             d += 1;
-            await parseORC(seg,d);
+            parseORC(seg,d);
         }
         if (type === 'OBR'){
-            await parseOBR(seg,d);
+            parseOBR(seg,d);
         }
         if (type === 'NTE'){
-            await parseNTE(seg,d);
+            parseNTE(seg,d);
         }
         if (type === 'OBX'){
-            await parseOBX(seg,d);
+            parseOBX(seg,d);
         }
     });
 }
 
-async function parseMSH(seg){
+function parseMSH(seg){
     let msh = seg.split('|');
     //MSH-3
     healthcareservice_lab.name = msh[2];
@@ -553,7 +1021,7 @@ async function parseMSH(seg){
     nbs_bundle.identifier.type.coding[1].display = msh[20];
 }
 
-async function parsePID(seg){
+function parsePID(seg){
     let pid = seg.split('|');
     //PID-3
     patient.identifier[1].value = pid[3].split('^')[0];
@@ -580,7 +1048,7 @@ async function parsePID(seg){
     patient.address[0].postalCode = a[4];
 }
 
-async function parsePV1(seg){
+function parsePV1(seg){
     let pv1 = seg.split('|');
     //PV1-2
     encounter.class.code = pv1[2];
@@ -857,6 +1325,99 @@ async function submitBundle(submission){
 }
 
 //FOR DEMO PURPOSES ONLY
+async function gatherIDs(){
+    let ids = [];
+    let repeat = true;
+    while (repeat === true){
+        repeat = false;
+        try{
+            let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Patient?identifier=results-demo';
+            let bundle = await fetchResource(url);
+            if (bundle.total !== 0){
+                let patient = bundle.entry[0].resource.id;
+
+                //DiagnosticReport
+                let url = 'http://localhost:8080/cqf-ruler-r4/fhir/DiagnosticReport?subject=' + patient + '&identifier=nbs-report';
+                bundle = await fetchResource(url);
+                bundle.entry.forEach((entry, i) => {
+                    ids.push([entry.resource.resourceType,entry.resource.id]);
+                });
+
+                //Observation
+                url = 'http://localhost:8080/cqf-ruler-r4/fhir/Observation?subject=' + patient + '&identifier=nbs-observation';
+                bundle = await fetchResource(url);
+                bundle.entry.forEach((entry, i) => {
+                    ids.push([entry.resource.resourceType,entry.resource.id]);
+                });
+
+                //ServiceRequest
+                url = 'http://localhost:8080/cqf-ruler-r4/fhir/ServiceRequest?subject=' + patient + '&identifier=nbs-servicerequest';
+                bundle = await fetchResource(url);
+                bundle.entry.forEach((entry, i) => {
+                    ids.push([entry.resource.resourceType,entry.resource.id]);
+                });
+
+                //Encounter
+                url = 'http://localhost:8080/cqf-ruler-r4/fhir/Encounter?subject=' + patient + '&identifier=nbs-encounter';
+                bundle = await fetchResource(url);
+                bundle.entry.forEach((entry, i) => {
+                    ids.push([entry.resource.resourceType,entry.resource.id]);
+                });
+
+                //Specimen
+                url = 'http://localhost:8080/cqf-ruler-r4/fhir/Specimen?subject=' + patient + '&identifier=nbs-specimen';
+                bundle = await fetchResource(url);
+                bundle.entry.forEach((entry, i) => {
+                    ids.push([entry.resource.resourceType,entry.resource.id]);
+                });
+
+                //Patient
+                ids.push(['Patient',patient]);
+            }
+            //Bundle
+            url = 'http://localhost:8080/cqf-ruler-r4/fhir/Bundle?identifier=784652' //+ bundle_identifier;
+            bundle = await fetchResource(url);
+            bundle.entry.forEach((entry, i) => {
+                ids.push([entry.resource.resourceType,entry.resource.id]);
+            });
+
+            //HealthcareService
+            url = 'http://localhost:8080/cqf-ruler-r4/fhir/HealthcareService?identifier=results-demo';
+            bundle = await fetchResource(url);
+            bundle.entry.forEach((entry, i) => {
+                ids.push([entry.resource.resourceType,entry.resource.id]);
+            });
+
+            //Practitioner
+            url = 'http://localhost:8080/cqf-ruler-r4/fhir/Practitioner?identifier=results-demo';
+            bundle = await fetchResource(url);
+            bundle.entry.forEach((entry, i) => {
+                ids.push([entry.resource.resourceType,entry.resource.id]);
+            });
+
+            //Organization
+            url = 'http://localhost:8080/cqf-ruler-r4/fhir/Organization?identifier=results-demo';
+            bundle = await fetchResource(url);
+            bundle.entry.forEach((entry, i) => {
+                ids.push([entry.resource.resourceType,entry.resource.id]);
+            });
+
+            //Location
+            url = 'http://localhost:8080/cqf-ruler-r4/fhir/Location?identifier=results-demo';
+            bundle = await fetchResource(url);
+            bundle.entry.forEach((entry, i) => {
+                ids.push([entry.resource.resourceType,entry.resource.id]);
+            });
+
+        }catch(error){
+            console.log(error);
+            repeat = true;
+        }
+    }
+    return ids
+}
+
+//FOR DEMO PURPOSES ONLY
 async function deleteRecords(){
     let url = 'http://localhost:8080/cqf-ruler-r4/fhir/Patient?identifier=results-demo';
     let bundle = await fetchResource(url);
@@ -917,7 +1478,6 @@ async function deleteRecords(){
         bundle = await fetchResource(url);
         await deleteResource(bundle);
         nbs_bundle = undefined;
-        await resultSummary()
         closeLoadingModal();
     }
 }
@@ -950,9 +1510,6 @@ function removeLoading(){
 
 function loadLibrary(type,content){
     drawTimeline()
-    if(type === 'research'){
-        fetchRss('https://pubmed.ncbi.nlm.nih.gov/rss/search/1DYWH3zMZml9Y-GH5h46gjnQXutviZuz-BCA7P5SX1gD_xlsh7/?limit=100&utm_campaign=pubmed-2&fc=20200722104350');
-    }
     content.library[type].forEach((source, i) => {
         let list = d3.select('#content-list');
         list.classed('loading',false);

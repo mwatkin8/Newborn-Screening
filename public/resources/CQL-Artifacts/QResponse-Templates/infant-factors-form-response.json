@@ -1,0 +1,159 @@
+{
+    "resourceType" : "QuestionnaireResponse",
+    "id": "infant-factors-form-response",
+    "questionnaire" : {
+        "reference": "Questionnaire/infant-factors-form"
+    },
+    "status" : "completed",
+    "subject" : {
+        "reference": "Patient/patient-infant"
+    },
+    "item" : [
+        {
+            "linkId": "/feeding-types",
+            "text": "Feeding type used for the baby within 3 hours prior to NBS collection.",
+            "answer" : [{"valueCoding" : ""}]
+        },
+        {
+            "linkId": "/infant-factors",
+            "text": "Infant factors that could impact NBS interpretation.",
+            "item":[
+                {
+                    "linkId": "/infant-factors/LA137-2",
+                    "text": "None",
+                    "answer": [{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA12419-0",
+                    "text": "Infant in NICU at time of specimen collection",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25801-4",
+                    "text": "Infant in special care setting (other than ICU) at time of specimen collection",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25802-2",
+                    "text": "Preterm/Low birth weight (LBW)",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA12417-4",
+                    "text": "Any blood product transfusion (including ECLS/ECMO)",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA16923-7",
+                    "text": "Dopamine",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA16924-5",
+                    "text": "Topical iodine",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25803-0",
+                    "text": "Acute illness",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25804-8",
+                    "text": "Hypothyroxinemia of preterm birth",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25812-1",
+                    "text": "Significant hypoxia",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25805-5",
+                    "text": "Immature hypothalamic/pituitary axis",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25806-3",
+                    "text": "Immature liver enzymes",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25807-1",
+                    "text": "Immature renal system",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25809-7",
+                    "text": "Iodine deficiency",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25810-5",
+                    "text": "Liver disease",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25811-3",
+                    "text": "Other conditions, such as biliary atresia, intestinal perforation, abdominal wall defects, septicemia, CMV, renal failure, T21, T18, T13",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA16925-2",
+                    "text": "Parenteral steroid treatment",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA12420-8",
+                    "text": "Systemic antibiotics before newborn screening",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA16927-8",
+                    "text": "Meconium ileus or other bowel obstruction",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25815-4",
+                    "text": "Thoracic surgery involving thymectomy",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25808-9",
+                    "text": "Immunosuppressive therapy of baby or mother",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25816-2",
+                    "text": "Total parenteral nutrition (TPN) or similar feeding",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25813-9",
+                    "text": "Special lactose-free diet",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA25814-7",
+                    "text": "Special low protein diet",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/LA46-8",
+                    "text": "Other",
+                    "answer":[{"valueBoolean" : ""}]
+                },
+                {
+                    "linkId": "/infant-factors/67703-9",
+                    "text": "Specify Other:",
+                    "answer":[{"valueString" : ""}]
+                }
+            ]
+        },
+        {
+            "linkId": "/62317-3",
+            "text": "The date of last blood product transfusion",
+            "answer": [{"valueDate" : ""}]
+        }
+    ]
+}

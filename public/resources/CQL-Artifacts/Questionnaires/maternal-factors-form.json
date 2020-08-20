@@ -1,0 +1,205 @@
+{
+    "id": "maternal-factors-form",
+    "status": "draft",
+    "name": "maternal-factors-form",
+    "title": "Maternal Factors",
+    "resourceType": "Questionnaire",
+    "meta": {
+        "profile": [
+            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+        ]
+    },
+    "extension": [
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-library",
+            "valueCanonical": "http://localhost:8080/cqf-ruler-r4/fhir/Library/maternal-factors"
+        }
+    ],
+    "item": [
+        {
+            "type": "group",
+            "code": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "67706-2",
+                    "display": "Maternal factors that affect newborn screening interpretation"
+                }
+            ],
+            "linkId": "/maternal-factors",
+            "text": "Maternal factors that affect newborn screening interpretation",
+            "item":[
+                {
+                    "linkId": "/maternal-factors/LA137-2",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA137-2",
+                            "display": "None"
+                        }
+                    ],
+                    "text": "None",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "HELLP syndrome"
+                            }
+                        }
+                    ],
+                    "linkId": "/maternal-factors/LA16928-6",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16928-6",
+                            "display": "HELLP syndrome"
+                        }
+                    ],
+                    "text": "HELLP syndrome",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Fatty liver of pregnancy"
+                            }
+                        }
+                    ],
+                    "linkId": "/maternal-factors/LA16929-4",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16929-4",
+                            "display": "Fatty liver of pregnancy"
+                        }
+                    ],
+                    "text": "Fatty liver of pregnancy",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Packed red blood cell (PRBC) transfusion"
+                            }
+                        }
+                    ],
+                    "linkId": "/maternal-factors/LA16930-2",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16930-2",
+                            "display": "Packed red blood cell (PRBC) transfusion"
+                        }
+                    ],
+                    "text": "Packed red blood cell (PRBC) transfusion",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Steroid treatment"
+                            }
+                        }
+                    ],
+                    "linkId": "/maternal-factors/LA16931-0",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16931-0",
+                            "display": "Steroid treatment"
+                        }
+                    ],
+                    "text": "Steroid treatment",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "Thyroid treatment (including propylthiouracil (PTU), methimazole (Tapazole), or past treatment with radioactive iodine (I-131))"
+                            }
+                        }
+                    ],
+                    "linkId": "/maternal-factors/LA16932-8",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA16932-8",
+                            "display": "Thyroid treatment (including propylthiouracil (PTU), methimazole (Tapazole), or past treatment with radioactive iodine (I-131))"
+                        }
+                    ],
+                    "text": "Thyroid treatment (including propylthiouracil (PTU), methimazole (Tapazole), or past treatment with radioactive iodine (I-131))",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                            "valueExpression": {
+                                "language": "text/cql",
+                                "expression": "TPN"
+                            }
+                        }
+                    ],
+                    "linkId": "/maternal-factors/LA12418-2",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA12418-2",
+                            "display": "TPN"
+                        }
+                    ],
+                    "text": "TPN",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "linkId": "/maternal-factors/LA46-8",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "LA46-8",
+                            "display": "Other"
+                        }
+                    ],
+                    "text": "Other",
+                    "type": "boolean",
+                    "required": false
+                },
+                {
+                    "linkId": "maternal-factors/67707-0",
+                    "code": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "67707-0",
+                            "display": "Other maternal factors that affect newborn screening interpretation Narrative"
+                        }
+                    ],
+                    "text": "Specify Other:",
+                    "type": "text",
+                    "required": false
+                }
+            ]
+        }
+    ]
+}

@@ -151,6 +151,36 @@
                 </div>
 
                 <!-- A modal element for viewing the raw resource JSON -->
+               <div id="questionnaire-modal" class="modal">
+                   <!-- The modal content -->
+                   <div class="modal-content">
+                       <h4>FHIR Questionnaire <button style="float:right;"class="btn btn-primary" onclick="closeModal('questionnaire')">Close</button></h4>
+                       <p id="questionnaire-json"></p>
+                   </div>
+               </div>
+               <div id="questionnaire-response-modal" class="modal">
+                   <!-- The modal content -->
+                   <div class="modal-content">
+                       <h4>FHIR QuestionnaireResponse <button style="float:right;"class="btn btn-primary" onclick="closeModal('questionnaire-response')">Close</button></h4>
+                       <p id="questionnaire-response-json"></p>
+                   </div>
+               </div>
+               <div id="cql-resource-modal" class="modal">
+                   <!-- The modal content -->
+                   <div class="modal-content">
+                       <h4>FHIR Resource detected via CQL <button style="float:right;"class="btn btn-primary" onclick="closeModal('cql-resource')">Close</button></h4>
+                       <p id="cql-resource-json"></p>
+                   </div>
+               </div>
+               <div id="cql-modal" class="modal">
+                   <!-- The modal content -->
+                   <div class="modal-content">
+                       <h4>CQL Library <button style="float:right;"class="btn btn-primary" onclick="closeModal('cql')">Close</button></h4>
+                       <p id="cql-json"></p>
+                   </div>
+               </div>
+
+                <!-- A modal element for viewing the raw resource JSON -->
                 <div id="enter-modal" class="modal">
                     <!-- The modal content -->
                     <div class="modal-content">
@@ -185,8 +215,11 @@
               <div class="row featurette">
                 <div class="col-md-12">
                     <ul class="nav nav-tabs justify-content-center">
+                    <li class="nav-item">
+                      <a id="nav-pre" class="nav-link active" href="#" onclick="resultPre();return false;">Pre-Result Form</a>
+                    </li>
                       <li class="nav-item">
-                        <a id="nav-summary" class="nav-link active" href="#" onclick="resultSummary();return false;">Summary</a>
+                        <a id="nav-summary" class="nav-link" href="#" onclick="resultSummary();return false;">Summary</a>
                       </li>
                       <li class="nav-item">
                         <a id="nav-pdf" class="nav-link" href="#" onclick="resultPDF();return false;">PDF</a>

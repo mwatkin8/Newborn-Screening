@@ -14,7 +14,11 @@
                     {
                       "code": "8640",
                       "display": "Prednisone"
-                    }
+                  },
+                  {
+                      "code":"365600",
+                      "display": "Betamethasone Injectable Suspension [Celestone Soluspan]"
+                  }
                 ]
             }
         ]

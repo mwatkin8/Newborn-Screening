@@ -1,0 +1,387 @@
+{
+    "resourceType": "Bundle",
+    "type": "transaction",
+    "entry": [
+        {
+            "resource": {
+                "resourceType": "Organization",
+                "id": "uofu-health",
+                "name": "University of Utah Health"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Organization/uofu-health"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Patient",
+                "id": "patient-infant",
+                "identifier": [
+                    {
+                        "system": "ResultsMyWay",
+                        "value": "123-456-789"
+                    }
+                ],
+                "active": true,
+                "name": [
+                    {
+                        "text": "Jacob Lee",
+                        "family": "Lee",
+                        "given": [
+                            "Jacob"
+                        ]
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "2020-08-15",
+                "address": [
+                    {
+                        "line": [
+                            "1 Newborn Way"
+                        ],
+                        "city": "Salt Lake City",
+                        "state": "Utah",
+                        "postalCode": "84121",
+                        "country": "US"
+                    }
+                ],
+                "managingOrganization": {
+                    "reference": "Organization/uofu-health"
+                }
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Patient/patient-infant"
+            }
+        },
+        {
+            "resource": {
+              "resourceType" : "Location",
+              "id" : "location-nicu",
+              "type" : [
+                  {
+                    "coding": [
+                        {
+                            "system":"http://terminology.hl7.org/ValueSet/v3-ServiceDeliveryLocationRoleType",
+                            "code":"PEDNICU",
+                            "display":"Pediatric neonatal intensive care unit"
+                        }
+                    ]
+                  }
+              ]
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Location/location-nicu"
+            }
+        },
+        {
+            "resource": {
+              "resourceType": "Encounter",
+              "id": "nicu-encounter",
+              "status": "finished",
+              "class": {
+                "system": "http://hl7.org/fhir/v3/ActCode",
+                "code": "ACUTE"
+              },
+              "location": [
+                  {
+                      "location": {
+                          "reference": "Location/location-nicu"
+                      },
+                      "status": "active"
+                  }
+              ],
+              "subject": {
+                "reference": "Patient/patient-infant"
+              },
+              "period": {
+                "start": "2020-08-15T00:00:00-07:00"
+              }
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Encounter/nicu-encounter"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Condition",
+                "id": "cond-lbw",
+                "clinicalStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-clinical",
+                            "code": "active"
+                        }
+                    ]
+                },
+                "verificationStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-ver-status",
+                            "code": "confirmed"
+                        }
+                    ]
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "276610007",
+                            "display": "Low birth weight infant (disorder)"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "Patient/patient-infant"
+                },
+                "onsetDateTime": "2020-08-18T00:00:00-06:00"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Condition/cond-lbw"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Condition",
+                "id": "cond-hypoxia",
+                "clinicalStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-clinical",
+                            "code": "active"
+                        }
+                    ]
+                },
+                "verificationStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-ver-status",
+                            "code": "confirmed"
+                        }
+                    ]
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/sid/icd-10-cm",
+                            "code":"P28.2",
+                            "display":"[P28.2] Cyanotic attacks of newborn"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "Patient/patient-infant"
+                },
+                "onsetDateTime": "2020-08-18T00:00:00-06:00"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Condition/cond-hypoxia"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Condition",
+                "id": "cond-hypothyroxinemia",
+                "clinicalStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-clinical",
+                            "code": "active"
+                        }
+                    ]
+                },
+                "severity": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "24484000",
+                            "display": "Severe"
+                        }
+                    ]
+                },
+                "verificationStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-ver-status",
+                            "code": "confirmed"
+                        }
+                    ]
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "119181000119104",
+                            "display": "Hypothyroxinemia of prematurity (disorder)"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "Patient/patient-infant"
+                },
+                "onsetDateTime": "2020-08-18T00:00:00-06:00"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Condition/cond-hypothyroxinemia"
+            }
+        },
+        {
+            "resource": {
+              "resourceType": "Procedure",
+              "id": "proc-transfusion",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "225068002",
+                    "display": "Red cell exchange transfusion (procedure)"
+                  }
+                ]
+              },
+              "subject": {
+                "reference": "Patient/patient-infant"
+              },
+              "performedDateTime": "2020-08-18T00:00:00-07:00"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Procedure/proc-transfusion"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Patient",
+                "id": "patient-mother",
+                "active": true,
+                "name": [
+                    {
+                        "use": "official",
+                        "family": "Lee",
+                        "given": [
+                            "Amy",
+                            "R."
+                        ]
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "email",
+                        "value": "amylee@gmail.com"
+                    }
+                ],
+                "gender": "female",
+                "birthDate": "1999-12-08",
+                "address": [
+                    {
+                        "line": [
+                            "1 Newborn Way"
+                        ],
+                        "city": "Salt Lake City",
+                        "state": "Utah",
+                        "postalCode": "84121",
+                        "country": "US"
+                    }
+                ],
+                "managingOrganization": {
+                    "reference": "Organization/uofu-health"
+                }
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Patient/patient-mother"
+            }
+        },
+        {
+            "resource": {
+                "resourceType": "Condition",
+                "id": "cond-hellp",
+                "clinicalStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-clinical",
+                            "code": "active"
+                        }
+                    ]
+                },
+                "verificationStatus": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/condition-ver-status",
+                            "code": "confirmed"
+                        }
+                    ]
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "95605009",
+                            "display": "Hemolysis-elevated liver enzymes-low platelet count syndrome (disorder)"
+                        }
+                    ],
+                    "text": "Hemolysis-elevated liver enzymes-low platelet count syndrome (disorder)"
+                },
+                "subject": {
+                    "reference": "Patient/patient-mother"
+                },
+                "onsetDateTime": "2020-08-18T00:00:00-06:00"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Condition/cond-hellp"
+            }
+        },
+        {
+            "resource": {
+              "resourceType": "Procedure",
+              "id": "proc-prbc-transfusion",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "71493000",
+                    "display": "Transfusion of packed red blood cells (procedure)"
+                  }
+                ]
+              },
+              "subject": {
+                "reference": "Patient/patient-mother"
+              },
+              "performedDateTime": "2020-08-18T00:00:00-07:00"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Procedure/proc-prbc-transfusion"
+            }
+        },
+        {
+            "resource": {
+              "resourceType": "MedicationRequest",
+              "id": "mr-steroid",
+              "status": "active",
+              "medicationCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                    "code": "365600",
+                    "display": "Betamethasone Injectable Suspension [Celestone Soluspan]"
+                  }
+                ]
+              },
+              "subject": {
+                "reference": "Patient/patient-mother"
+              }
+            },
+            "request": {
+                "method": "PUT",
+                "url": "MedicationRequest/mr-steroid"
+            }
+        }
+    ]
+}

@@ -20,36 +20,58 @@ context Patient
 
 define "HELLP syndrome":
     [Condition: "HELLP Set"] C
-    return C.id.value
+    return {
+        "Type": '\"Condition\",',
+        "ID": '\"' + C.id.value + '\"'
+    }
 
 define "Fatty liver of pregnancy":
     [Condition: "Pregnancy Fatty Liver Set"] C
-    return C.id.value
+    return {
+        "Type": '\"Condition\",',
+        "ID": '\"' + C.id.value + '\"'
+    }
 
 define "Packed red blood cell (PRBC) transfusion":
     [Procedure: "PRBC Transfusion Set"] P
-    return P.id.value
+    return {
+        "Type": '\"Procedure\",',
+        "ID": '\"' + P.id.value + '\"'
+    }
 
 define "Steroid treatment":
     [MedicationRequest: "Steroid Treatment Set"] M
-    return M.id.value
+    return {
+        "Type": '\"MedicationRequest\",',
+        "ID": '\"' + M.id.value + '\"'
+    }
 
 define "Thyroid treatment (including propylthiouracil (PTU), methimazole (Tapazole), or past treatment with radioactive iodine (I-131))":
     [MedicationRequest: "Thyroid Treatments Set"] M
-    return M.id.value
+    return {
+        "Type": '\"MedicationRequest\",',
+        "ID": '\"' + M.id.value + '\"'
+    }
 
 define "TPN":
     [Observation: "TPN Set"] O
-    return O.id.value
+    return {
+        "Type": '\"Observation\",',
+        "ID": '\"' + O.id.value + '\"'
+    }
 
 //For InfantFactors Library - "or mother"
 define "Immunosuppressive therapy of baby or mother":
     [Procedure: "Immunosuppressive Therapy Set"] P
-    return P.id.value
+    return {
+        "Type": '\"Procedure\",',
+        "ID": '\"' + P.id.value + '\"'
+    }
 
 define "The narrative for infant factors that could impact NBS interpretation.":
     [Observation: "Maternal Factors Narrative Code"] O
     return {
-        "ID": O.id,
-        "Narrative": O.value
-     }
+        "Type": '\"Observation\",',
+        "ID": '\"' + O.id.value + '\",',
+        "Narrative": '\"' + O.value + '\"'
+    }
