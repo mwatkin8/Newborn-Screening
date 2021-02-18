@@ -53,7 +53,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <jetty.version>9.4.28.v20200408</jetty.version>
-        <jackson.version>2.10.1</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
         <hapi.version>4.2.0</hapi.version>
         <cqf-tooling.version>1.1.1</cqf-tooling.version>
         <cql-engine.version>1.5.0-SNAPSHOT</cql-engine.version>
