@@ -52,7 +52,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <jetty.version>9.4.28.v20200408</jetty.version>
+        <jetty.version>9.4.41.v20210516</jetty.version>
         <jackson.version>2.10.1</jackson.version>
         <hapi.version>4.2.0</hapi.version>
         <cqf-tooling.version>1.1.1</cqf-tooling.version>
